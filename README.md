@@ -2,4 +2,5 @@
 
 This project was created on the PICK LinuxTips and have objective allow practice my abilities in Security Practices, Resource Efficient, Monitoring and Automation.
 
-Below have some descriptions of tools used in this project:
+Below have some descriptions and decisions about tools used in this project:
+
