@@ -6,7 +6,6 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 
 ### TODO
 - [ ] Dashboard Giropops Senhas with Prometheus+Grafana;
-- [ ] Chainguard Cosign - Signing Docker images;
 - [ ] CI/CD with Github Actions:
   - [ ] Add step to Docker image scan vulnerabilities;
 - [ ] Load Test with K6 (min TP: 1000 rpm without any errors);
@@ -17,6 +16,7 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 
 - [ ] README.md:
   - [ ] What's your decisions and process used in this project;
+- [ ] Chainguard Cosign - Signing Docker images;
 
 ### DONE
 
