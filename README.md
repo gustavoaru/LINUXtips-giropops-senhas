@@ -5,17 +5,11 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 ## Project tasks
 
 ### TODO
-- [ ] Dashboard Giropops Senhas with Prometheus+Grafana;
-  - [ ] Add step to Docker image scan vulnerabilities;
-- [ ] Load Test with K6 (min TP: 1000 rpm without any errors);
-- [ ] K8s resource analysis after Load Test;
-- [ ] Open Github Pull Request;
+- [ ] Lint Kube and YAML;
+- [ ] README.md:
+  - [ ] How to fix spike request on application;
 
 ### WIP
-
-- [ ] README.md:
-  - [ ] What's your decisions and process used in this project;
-- [ ] CI/CD with Github Actions:
 
 ### DONE
 
@@ -32,6 +26,11 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
   - [x] Install Prometheus on K8s;
   - [x] Instrument Prometheus on project using ServiceMonitor CRD;
 - [x] Chainguard Cosign - Signing Docker images;
+- [x] CI with Github Actions;
+- [x] Load Test with K6 (min TP: 1000 rpm without any errors):
+  - [x] K8s resource analysis after Load Test;
+- [x] README.md:
+  - [x] What's your decisions and process used in this project;
 
 Below have some descriptions and decisions about tools used in this project:
 
@@ -74,3 +73,28 @@ giropops-senhas:0.1 (wolfi 20230201)
 Total: 0 (UNKNOWN: 0, LOW: 0, MEDIUM: 0, HIGH: 0, CRITICAL: 0)
 ```
 
+## Running
+
+For running this project look steps above:
+
+- Choose how to run your cluster. I'm running on Kind cluster locally:
+```
+kind create cluster --config kind/cluster.yaml
+```
+- Install kube-prometheus to instrument your application on Prometheus with ServiceMonitor CRD. More details about installation method in the Github repository: https://github.com/prometheus-operator/kube-prometheus.
+- 
+```
+git clone 
+```
+
+## CI
+
+I used Github Actions to create CI on this project. When new push is performed in the branches `main` and `develop` these steps are executed:
+- Docker Hub login;
+- Docker build;
+- Run Trivy scan to search any vulnerabilities;
+- Build and push to Docker Hub;
+
+## Load Test
+
+I used K6 to run load test on application. Using K6 my objective was ensure application receive 1000 rpm 
