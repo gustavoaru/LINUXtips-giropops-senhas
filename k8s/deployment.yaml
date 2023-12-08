@@ -21,18 +21,18 @@ spec:
         app: giropops-senhas-antonioazambuja
     spec:
       containers:
-        - image: giropops-senhas:0.1
+        - image: ablackout3/giropops-senhas:latest
           name: giropops-senhas-antonioazambuja
           env:
             - name: REDIS_HOST
               value: "redis-antonioazambuja.default.svc.cluster.local"
           resources:
             requests:
-              cpu: "0.5m"
-              memory: "512M"
+              cpu: "50m"
+              memory: "64M"
             limits:
-              cpu: "1"
-              memory: "1024M"
+              cpu: "70m"
+              memory: "128M"
           ports:
             - containerPort: 5000
               name: flask
@@ -51,4 +51,4 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             # runAsNonRoot: true
-          imagePullPolicy: Never
+          imagePullPolicy: Always
