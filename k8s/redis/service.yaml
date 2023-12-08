@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: redis-antonioazambuja
+  labels:
+    app: redis-antonioazambuja
+spec:
+  selector:
+    app: redis-antonioazambuja
+  type: ClusterIP
+  ports:
+  - name: redis
+    port: 6379
+    targetPort: 6379

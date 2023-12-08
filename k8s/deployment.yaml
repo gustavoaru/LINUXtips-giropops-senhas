@@ -1,0 +1,54 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: giropops-senhas-antonioazambuja
+  labels:
+    app: giropops-senhas-antonioazambuja
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: giropops-senhas-antonioazambuja
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: giropops-senhas-antonioazambuja
+    spec:
+      containers:
+        - image: ablackout3/giropops-senhas:latest
+          name: giropops-senhas-antonioazambuja
+          env:
+            - name: REDIS_HOST
+              value: "redis-antonioazambuja.default.svc.cluster.local"
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64M"
+            limits:
+              cpu: "70m"
+              memory: "128M"
+          ports:
+            - containerPort: 5000
+              name: flask
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 5000
+            initialDelaySeconds: 20
+            timeoutSeconds: 1
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 5000
+            initialDelaySeconds: 20
+            timeoutSeconds: 1
+          securityContext:
+            allowPrivilegeEscalation: false
+            # runAsNonRoot: true
+          imagePullPolicy: Always

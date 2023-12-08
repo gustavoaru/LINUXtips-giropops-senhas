@@ -1,0 +1,15 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: giropops-senhas-antonioazambuja
+  labels:
+    app: giropops-senhas-antonioazambuja
+spec:
+  selector:
+    matchLabels:
+      app: giropops-senhas-antonioazambuja
+  endpoints:
+    - interval: 10s
+      path: /metrics
+      targetPort: 5000
