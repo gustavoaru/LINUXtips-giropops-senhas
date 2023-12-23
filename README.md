@@ -5,9 +5,26 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 ## Project tasks
 
 ### TODO
-- [ ] Lint Kube and YAML;
+- [ ] AlertManager Alarms to giropops-senhas;
+- [ ] Github Actions:
+  - [ ] CD:
+    - [ ] Infrastructure:
+      - [ ] eksctl with YAML;
+      - [ ] Metrics Server;
+      - [ ] kube-prometheus;
+      - [ ] Ingress Nginx;
+      - [ ] K6 Operator;
+    - [ ] Application:
+      - [ ] Deploy;
+      - [ ] CI:
+        - [ ] Run Load Test with K6:
+          - [ ] Using K6 Operator;
+          - [ ] Using K6 local with ingress of giropops-senhas;
+        - [ ] Migrate Public Docker Hub Repository to Private Docker Hub Registry or AWS ECR;
+  - [ ] Sign with Cosign;
+  - [ ] Lint Kube and YAML;
 - [ ] README.md:
-  - [ ] How to fix spike request on application;
+  - [ ] How to fix spike request on application?;
 
 ### WIP
 
