@@ -1,0 +1,34 @@
+---
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: pick-linuxtips
+  region: us-east-1
+  version: '1.28'
+  tags:
+    cluster-name: pick-linuxtips
+    owner: antonioazambuja
+
+availabilityZones: ["us-east-1a", "us-east-1b",  "us-east-1c"]
+
+nodeGroups:
+  - name: ng-1
+    minSize: 3
+    maxSize: 3
+    instanceType: m5.large
+    volumeType: gp2
+    desiredCapacity: 3
+    volumeSize: 80
+    ssh:
+      enableSsm: true
+  - name: ng-2-spot
+    minSize: 2
+    maxSize: 5
+    desiredCapacity: 2
+    instancesDistribution:
+      maxPrice: 0.017
+      instanceTypes: ["t3.small", "t3.medium"] # At least one instance type should be specified
+      onDemandBaseCapacity: 0
+      onDemandPercentageAboveBaseCapacity: 50
+      spotInstancePools: 2
