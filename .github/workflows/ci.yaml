@@ -9,6 +9,7 @@ on:
 env:
   VERSION_TAG: ${{ secrets.DOCKERHUB_USERNAME }}/giropops-senhas:0.${{ github.run_number }}
   LATEST_TAG: ${{ secrets.DOCKERHUB_USERNAME }}/giropops-senhas:latest
+  KUBECTL_ACTION_VERSION: v1.29.0
 
 permissions:
   contents: read
@@ -51,3 +52,17 @@ jobs:
         file: ./Dockerfile
         push: true
         tags: ${{ env.VERSION_TAG }},${{ env.LATEST_TAG }}
+
+    - name: Deploy Redis
+      uses: actions-hub/kubectl@${ env.KUBECTL_ACTION_VERSION }
+      env:
+        KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+      with:
+        args: apply -f k8s/redis
+
+    - name: Deploy giropops-senhas
+      uses: actions-hub/kubectl@${ env.KUBECTL_ACTION_VERSION }
+      env:
+        KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+      with:
+        args: apply -f k8s/
