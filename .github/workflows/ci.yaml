@@ -9,6 +9,7 @@ on:
 env:
   VERSION_TAG: ${{ secrets.DOCKERHUB_USERNAME }}/giropops-senhas:0.${{ github.run_number }}
   LATEST_TAG: ${{ secrets.DOCKERHUB_USERNAME }}/giropops-senhas:latest
+  AWS_REGION: us-east-1
 
 permissions:
   contents: read
@@ -56,6 +57,13 @@ jobs:
     #     file: ./Dockerfile
     #     push: true
     #     tags: ${{ env.VERSION_TAG }},${{ env.LATEST_TAG }}
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
 
     - name: Deploy Redis
       uses: actions-hub/kubectl@v1.29.0
