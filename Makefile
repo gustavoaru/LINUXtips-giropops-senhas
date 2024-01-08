@@ -15,6 +15,9 @@ giropops-senhas-deploy:          ## Deploy giropops-senhas
 eks-create-cluster:              ## eksctl create cluster
 	eksctl create cluster -f eks/cluster.yaml
 
+eks-delete-cluster:              ## eksctl delete cluster
+	eksctl delete cluster -f eks/cluster.yaml --disable-nodegroup-eviction
+
 kind-create-cluster:             ## kind create cluster
 	kind create cluster --config kind/cluster.yaml
 
