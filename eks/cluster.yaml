@@ -20,8 +20,6 @@ nodeGroups:
     volumeType: gp2
     desiredCapacity: 3
     volumeSize: 80
-    ssh:
-      enableSsm: true
   - name: ng-2-spot
     minSize: 2
     maxSize: 5
