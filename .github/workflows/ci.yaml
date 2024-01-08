@@ -65,6 +65,9 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
+    - name: Update kube config
+      run: aws eks update-kubeconfig --name pick-linuxtips --region $AWS_REGION
+
     - name: Deploy Redis
       uses: actions-hub/kubectl@v1.29.0
       env:
