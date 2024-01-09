@@ -57,11 +57,10 @@ jobs:
       uses: helm/kind-action@v1.8.0
       with:
         config: kind/cluster.yaml
-
-    - name: kubectl get pods
-      uses: actions-hub/kubectl@v1.29.0
-      with:
-        args: get pods
+    - run: |
+        make install-cluster-deps
+        make redis-deploy
+        make giropops-senhas
 
     # - name: Deploy giropops-senhas
     #   uses: actions-hub/kubectl@v1.29.0
