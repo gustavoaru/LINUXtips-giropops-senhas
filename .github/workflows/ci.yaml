@@ -45,11 +45,6 @@ jobs:
       with:
         image-ref: ${{ env.LATEST_TAG }}
 
-    - name: Create k8s Kind Cluster
-      uses: helm/kind-action@v1.8.0
-      with:
-        cluster_name: kind-pick
-
     - name: Build and push
       uses: docker/build-push-action@v5
       with:
@@ -57,6 +52,11 @@ jobs:
         file: ./Dockerfile
         push: true
         tags: ${{ env.VERSION_TAG }},${{ env.LATEST_TAG }}
+
+    - name: Create k8s Kind Cluster
+      uses: helm/kind-action@v1.8.0
+      with:
+        config: kind/cluster.yaml
 
     - name: kubectl get pods
       uses: actions-hub/kubectl@v1.29.0
