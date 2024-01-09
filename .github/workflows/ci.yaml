@@ -45,10 +45,10 @@ jobs:
       with:
         image-ref: ${{ env.LATEST_TAG }}
 
-    # - name: Create k8s Kind Cluster
-    #   uses: helm/kind-action@v1.8.0
-    #   with:
-    #     cluster_name: kind-pick
+    - name: Create k8s Kind Cluster
+      uses: helm/kind-action@v1.8.0
+      with:
+        cluster_name: kind-pick
 
     - name: Build and push
       uses: docker/build-push-action@v5
@@ -58,14 +58,10 @@ jobs:
         push: true
         tags: ${{ env.VERSION_TAG }},${{ env.LATEST_TAG }}
 
-    # - name: Deploy Redis
-    #   uses: actions-hub/kubectl@v1.29.0
-    #   env:
-    #     KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-    #   with:
-    #     args: get pods # Como autenticar no EKS? O token expira após um
-    #                    # curto periodo, então não da para criar um kubeconfig com um token gerado
-    #                    # Analisar: https://docs.aws.amazon.com/eks/latest/userguide/cluster-auth.html
+    - name: kubectl get pods
+      uses: actions-hub/kubectl@v1.29.0
+      with:
+        args: get pods
 
     # - name: Deploy giropops-senhas
     #   uses: actions-hub/kubectl@v1.29.0
