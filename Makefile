@@ -7,10 +7,10 @@ help:                            ## Show help of target details
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 redis-deploy:                    ## Deploy Redis
-	k apply -f k8s/redis
+	kubectl apply -f k8s/redis
 
 giropops-senhas-deploy:          ## Deploy giropops-senhas
-	k apply -f k8s/
+	kubectl apply -f k8s/
 
 eks-create-cluster:              ## eksctl create cluster
 	eksctl create cluster -f eks/cluster.yaml
