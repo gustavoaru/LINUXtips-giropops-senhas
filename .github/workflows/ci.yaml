@@ -60,7 +60,7 @@ jobs:
     - run: |
         make install-cluster-deps
         make redis-deploy
-        make giropops-senhas
+        make giropops-senhas-deploy
 
     # - name: Deploy giropops-senhas
     #   uses: actions-hub/kubectl@v1.29.0
