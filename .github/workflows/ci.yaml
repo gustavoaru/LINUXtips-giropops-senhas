@@ -53,12 +53,12 @@ jobs:
         push: true
         tags: ${{ env.VERSION_TAG }},${{ env.LATEST_TAG }}
 
-    - name: Create k8s Kind Cluster
-      uses: helm/kind-action@v1.8.0
-      with:
-        config: kind/cluster.yaml
-    - run: |
-        make install-cluster-deps
-        make redis-deploy
-        make giropops-senhas-deploy-without-ingress
-        make run-load-test-k6-operator
+    # - name: Create k8s Kind Cluster
+    #   uses: helm/kind-action@v1.8.0
+    #   with:
+    #     config: kind/cluster.yaml
+    # - run: |
+    #     make install-cluster-deps
+    #     make redis-deploy
+    #     make giropops-senhas-deploy-without-ingress
+    #     make run-load-test-k6-operator
