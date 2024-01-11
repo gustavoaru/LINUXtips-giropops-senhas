@@ -52,3 +52,71 @@ spec:
             allowPrivilegeEscalation: false
             # runAsNonRoot: true
           imagePullPolicy: Always
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: myapp
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: giropops-senhas-antonioazambuja
+  minReplicas: 3
+  maxReplicas: 6
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 80
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: giropops-senhas-antonioazambuja
+  labels:
+    app: giropops-senhas-antonioazambuja
+spec:
+  selector:
+    app: giropops-senhas-antonioazambuja
+  type: ClusterIP
+  ports:
+  - name: flask
+    port: 5000
+    targetPort: 5000
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: giropops-senhas-antonioazambuja
+  labels:
+    app: giropops-senhas-antonioazambuja
+spec:
+  selector:
+    matchLabels:
+      app: giropops-senhas-antonioazambuja
+  endpoints:
+    - interval: 10s
+      path: /metrics
+      targetPort: 5000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: giropops-senhas-antonioazambuja
+  labels:
+    name: giropops-senhas-antonioazambuja
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: giropops-senhas-antonioazambuja
+            port: 
+              number: 5000

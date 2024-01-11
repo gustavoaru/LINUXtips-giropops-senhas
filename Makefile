@@ -7,13 +7,13 @@ help:                            ## Show help of target details
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 redis-deploy:                    ## Deploy Redis
-	kubectl apply -f k8s/redis
+	kubectl apply -f manifests/redis.yaml
 
 giropops-senhas-deploy:          ## Deploy giropops-senhas
-	kubectl apply -f k8s/
+	kubectl apply -f manifests/deploy.yaml
 
 giropops-senhas-deploy-without-ingress:          ## Deploy giropops-senhas without ingress
-	kubectl apply -f k8s/deployment.yaml k8s/hpa.yaml k8s/service.yaml k8s/servicemonitor.yaml
+	kubectl apply -f manifests/deploy-without-ingress.yaml
 
 eks-create-cluster:              ## eksctl create cluster
 	eksctl create cluster -f eks/cluster.yaml
