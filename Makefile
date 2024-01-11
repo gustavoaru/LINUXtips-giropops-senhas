@@ -1,5 +1,6 @@
 METRICS_SERVER_VERSION = 3.11.0
 KUBE_PROMETHEUS_STACK_VERSION = 55.5.2
+K6_OPERATOR_VERSION = 3.3.0
 
 all: eks-create-cluster install-cluster-deps redis-deploy giropops-senhas-deploy run-load-test
 
@@ -28,6 +29,10 @@ metrics-server-install:          ## Install Metrics Server
 	helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
 	helm upgrade --install metrics-server metrics-server/metrics-server --version $(METRICS_SERVER_VERSION)
 
+k6-operator-install:          ## Install Metrics Server
+	helm repo add grafana https://grafana.github.io/helm-charts
+	helm install k6-operator grafana/k6-operator --version $(K6_OPERATOR_VERSION) --wait
+
 kube-prometheus-stack-install:   ## Install Kube Prometheus Stack
 	helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 	helm install kube-prometheus prometheus-community/kube-prometheus-stack
@@ -38,7 +43,10 @@ ingress-nginx-install:           ## Install Ingress Nginx
 		--repo https://kubernetes.github.io/ingress-nginx \
 		--namespace ingress-nginx --create-namespace
 
-install-cluster-deps: metrics-server-install kube-prometheus-stack-install ingress-nginx-install            ## Install Cluster Dependencies
+install-cluster-deps: metrics-server-install kube-prometheus-stack-install ingress-nginx-install k6-operator-install           ## Install Cluster Dependencies
 
 run-load-test:                   ## Run Load Test
 	k6 run load-test/giropops-senhas.js
+
+run-load-test-k6-operator:       ## Run Load Test in the K6 Operator
+	kubectl apply -f load-test/
