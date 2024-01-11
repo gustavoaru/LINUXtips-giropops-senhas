@@ -1,0 +1,78 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: giropops-senhas-antonioazambuja-load-test-k6
+data:
+  giropops-senhas.js: |-
+    import http from "k6/http";
+
+    export const options = {
+      scenarios: {
+        index: {
+          executor: "constant-arrival-rate",
+          exec: "index",
+          rate: 3000,
+          timeUnit: '1m',
+          duration: '5m',
+          preAllocatedVUs: 150,
+          maxVUs: 300
+        },
+        generate_pwd: {
+          executor: "constant-arrival-rate",
+          exec: "generate_pwd",
+          rate: 3000,
+          timeUnit: '1m',
+          duration: '5m',
+          preAllocatedVUs: 150,
+          maxVUs: 300
+        },
+        get_pwd: {
+          executor: "constant-arrival-rate",
+          exec: "get_pwd",
+          rate: 3000,
+          timeUnit: '1m',
+          duration: '5m',
+          preAllocatedVUs: 150,
+          maxVUs: 300
+        },
+      },
+    };
+
+    export function index() {
+      http.get('http://giropops-senhas-antonioazambuja/');
+    }
+
+    export function generate_pwd() {
+      const min = 20;
+      const max = 50;
+      const random = (min, max) => Math.floor(Math.random() * (max - min)) + min;
+      const payload = JSON.stringify({
+        tamanho: random,
+        incluir_numeros: true,
+        incluir_caracteres_especiais: true
+      });
+
+      const params = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      http.post('http://giropops-senhas-antonioazambuja/api/gerar-senha', payload, params);
+    }
+
+    export function get_pwd() {
+      http.get('http://giropops-senhas-antonioazambuja/api/senhas');
+    }
+---
+apiVersion: k6.io/v1alpha1
+kind: K6
+metadata:
+  name: giropops-senhas-antonioazambuja-load-test-k6
+spec:
+  parallelism: 1
+  script:
+    configMap:
+      name: giropops-senhas-antonioazambuja-load-test-k6
+      file: giropops-senhas.js
