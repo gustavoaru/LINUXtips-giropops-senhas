@@ -12,6 +12,9 @@ redis-deploy:                    ## Deploy Redis
 giropops-senhas-deploy:          ## Deploy giropops-senhas
 	kubectl apply -f k8s/
 
+giropops-senhas-deploy-without-ingress:          ## Deploy giropops-senhas without ingress
+	kubectl apply k8s/deployment.yaml k8s/hpa.yaml k8s/service.yaml k8s/servicemonitor.yaml
+
 eks-create-cluster:              ## eksctl create cluster
 	eksctl create cluster -f eks/cluster.yaml
 
