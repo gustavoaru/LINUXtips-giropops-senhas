@@ -10,7 +10,7 @@ metadata:
     cluster-name: pick-linuxtips
     owner: antonioazambuja
 
-availabilityZones: ["us-east-1a", "us-east-1b",  "us-east-1c"]
+availabilityZones: ["us-east-1a", "us-east-1b", "us-east-1c"]
 
 nodeGroups:
   - name: ng-1
@@ -26,7 +26,7 @@ nodeGroups:
     desiredCapacity: 2
     instancesDistribution:
       maxPrice: 0.017
-      instanceTypes: ["t3.small", "t3.medium"] # At least one instance type should be specified
+      instanceTypes: ["t3.small", "t3.medium"]
       onDemandBaseCapacity: 0
       onDemandPercentageAboveBaseCapacity: 50
       spotInstancePools: 2
