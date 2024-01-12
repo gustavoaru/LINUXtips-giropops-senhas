@@ -92,6 +92,12 @@ jobs:
         yamllint_file_or_dir: 'load-test/'
         yamllint_config_filepath: '.yamllint.yaml'
 
+    - name: kube-linter K8s manifests
+      uses: stackrox/kube-linter-action@v1
+      with:
+        directory: manifests
+        config: .kube-linter.yaml
+
     # - name: Create k8s Kind Cluster
     #   uses: helm/kind-action@v1.8.0
     #   with:
