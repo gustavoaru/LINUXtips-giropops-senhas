@@ -51,5 +51,5 @@ run-load-test:                   ## Run Load Test
 run-load-test-k6-operator:       ## Run Load Test in the K6 Operator
 	kubectl apply -f load-test/
 	sleep 5
-	kubectl wait --for=condition=complete job -l k6_cr=giropops-senhas-antonioazambuja-load-test-k6
+	kubectl wait --for=condition=complete job -l k6_cr=giropops-senhas-load-test-k6 --timeout 10m
 	kubectl delete -f load-test/

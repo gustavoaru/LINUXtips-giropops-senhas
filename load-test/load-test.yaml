@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: giropops-senhas-antonioazambuja-load-test-k6
+  name: giropops-senhas-load-test-k6
 data:
   giropops-senhas.js: |-
     import http from "k6/http";
@@ -12,35 +12,35 @@ data:
         index: {
           executor: "constant-arrival-rate",
           exec: "index",
-          rate: 3000,
+          rate: 4000,
           timeUnit: '1m',
           duration: '5m',
-          preAllocatedVUs: 150,
-          maxVUs: 300
+          preAllocatedVUs: 5,
+          maxVUs: 60
         },
         generate_pwd: {
           executor: "constant-arrival-rate",
           exec: "generate_pwd",
-          rate: 3000,
+          rate: 4000,
           timeUnit: '1m',
           duration: '5m',
-          preAllocatedVUs: 150,
-          maxVUs: 300
+          preAllocatedVUs: 5,
+          maxVUs: 60
         },
         get_pwd: {
           executor: "constant-arrival-rate",
           exec: "get_pwd",
-          rate: 3000,
+          rate: 4000,
           timeUnit: '1m',
           duration: '5m',
-          preAllocatedVUs: 150,
-          maxVUs: 300
+          preAllocatedVUs: 5,
+          maxVUs: 60
         },
       },
     };
 
     export function index() {
-      http.get('http://giropops-senhas-antonioazambuja:5000/');
+      http.get('http://giropops-senhas:5000/');
     }
 
     export function generate_pwd() {
@@ -55,24 +55,24 @@ data:
 
       const params = {
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
       };
 
-      http.post('http://giropops-senhas-antonioazambuja:5000/api/gerar-senha', payload, params);
+      http.post('http://giropops-senhas:5000/api/gerar-senha', payload, params);
     }
 
     export function get_pwd() {
-      http.get('http://giropops-senhas-antonioazambuja:5000/api/senhas');
+      http.get('http://giropops-senhas:5000/api/senhas');
     }
 ---
 apiVersion: k6.io/v1alpha1
 kind: K6
 metadata:
-  name: giropops-senhas-antonioazambuja-load-test-k6
+  name: giropops-senhas-load-test-k6
 spec:
-  parallelism: 1
+  parallelism: 2
   script:
     configMap:
-      name: giropops-senhas-antonioazambuja-load-test-k6
+      name: giropops-senhas-load-test-k6
       file: giropops-senhas.js
