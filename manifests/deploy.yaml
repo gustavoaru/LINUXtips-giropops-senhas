@@ -50,7 +50,8 @@ spec:
             timeoutSeconds: 1
           securityContext:
             allowPrivilegeEscalation: false
-            # runAsNonRoot: true
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
           imagePullPolicy: Always
 ---
 apiVersion: autoscaling/v2
