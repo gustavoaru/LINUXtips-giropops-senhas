@@ -98,6 +98,12 @@ jobs:
         directory: manifests
         config: .kube-linter.yaml
 
+    - name: kube-linter K6 manifests
+      uses: stackrox/kube-linter-action@v1
+      with:
+        directory: manifests
+        config: .kube-linter.yaml
+
     # - name: Create k8s Kind Cluster
     #   uses: helm/kind-action@v1.8.0
     #   with:
