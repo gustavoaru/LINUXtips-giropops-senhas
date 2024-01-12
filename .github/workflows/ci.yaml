@@ -101,7 +101,7 @@ jobs:
     - name: kube-linter K6 manifests
       uses: stackrox/kube-linter-action@v1
       with:
-        directory: manifests
+        directory: load-test
         config: .kube-linter.yaml
 
     # - name: Create k8s Kind Cluster
