@@ -68,6 +68,26 @@ jobs:
     - name: Sign the container image ${{ env.VERSION_TAG }}
       run: cosign sign --yes ${{ env.VERSION_TAG }}
 
+    - name: 'Yamllint K8s manifests'
+      uses: karancode/yamllint-github-action@master
+      with:
+        yamllint_file_or_dir: 'manifests/'
+
+    - name: 'Yamllint EKS Cluster'
+      uses: karancode/yamllint-github-action@master
+      with:
+        yamllint_file_or_dir: 'eks/'
+
+    - name: 'Yamllint Kind Cluster'
+      uses: karancode/yamllint-github-action@master
+      with:
+        yamllint_file_or_dir: 'kind/'
+
+    - name: 'Yamllint Load Test - K6 Operator manifests'
+      uses: karancode/yamllint-github-action@master
+      with:
+        yamllint_file_or_dir: 'load-test/'
+
     # - name: Create k8s Kind Cluster
     #   uses: helm/kind-action@v1.8.0
     #   with:
