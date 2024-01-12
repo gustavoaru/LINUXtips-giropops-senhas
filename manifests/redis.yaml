@@ -5,6 +5,7 @@ metadata:
   name: redis
   annotations:
     ignore-check.kube-linter.io/minimum-three-replicas: "This deployment can run as one replica because it actually run as single node"
+    ignore-check.kube-linter.io/no-read-only-root-fs: "This deployment can need run with access to root filesystem because it actually run as default parameters"
   labels:
     app: redis
 spec:
