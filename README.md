@@ -4,8 +4,13 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 
 ## Project tasks
 
-### TODO
-- [ ] AlertManager Alarms to giropops-senhas;
+### BACKLOG
+
+- [ ] [k8sgps](https://github.com/k8sgpt-ai/k8sgpt);
+- [ ] [kube-bench](https://github.com/aquasecurity/kube-bench);
+- [ ] Github Actions:
+  - [ ] Use [GitHub's OIDC provider](https://github.com/aws-actions/configure-aws-credentials#OIDC) instead AWS IAM secrets;
+    - [ ] https://medium.com/@extio/kubernetes-authentication-with-oidc-simplifying-identity-management-c56ede8f2dec
 - [ ] Github Actions:
   - [ ] CD:
     - [ ] Infrastructure:
@@ -13,20 +18,32 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
       - [ ] Metrics Server;
       - [ ] kube-prometheus;
       - [ ] Ingress Nginx;
-      - [ ] K6 Operator;
     - [ ] Application:
       - [ ] Deploy;
-      - [ ] CI:
-        - [ ] Run Load Test with K6:
-          - [ ] Using K6 Operator;
-          - [ ] Using K6 local with ingress of giropops-senhas;
-        - [ ] Migrate Public Docker Hub Repository to Private Docker Hub Registry or AWS ECR;
-  - [ ] Sign with Cosign;
-  - [ ] Lint Kube and YAML;
+      - [ ] Install Kind on Github Action to test giropops-senhas;
+
+### TODO
+- [ ] Prometheus Monitoring:
+  - [ ] AlertManager Alarms to giropops-senhas;
+  - [ ] Add more metrics to giropops-senhas;
+  - [ ] Add more metrics to Redis;
+- [ ] Infrastructure:
+  - [ ] K6 Operator;
+  - [ ] Fix vulnerabilities founds in each Chart using [Chainguard Images](https://images.chainguard.dev/);
+- [ ] Application:
+  - [ ] CI:
+    - [ ] Run Load Test with K6:
+      - [ ] Using K6 Operator to run load test inside K8s cluster using K8s service endpoint;
+      - [ ] Using K6 local with ingress of giropops-senhas;
+    - [ ] Migrate Public Docker Hub Repository to Private Docker Hub Registry or AWS ECR;
 - [ ] README.md:
+  - [ ] Add README how to install dependencies to use Makefile;
   - [ ] How to fix spike request on application?;
 
 ### WIP
+
+- [ ] Github Actions:
+  - [ ] Add CRDs support on kube-linter;
 
 ### DONE
 
@@ -39,6 +56,11 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
   - [x] YAML manifests;
   - [x] Best Practices;
   - [x] YAML Linting;
+- [x] Github Actions:
+  - [x] Sign with Cosign;
+  - [x] Lint Kube and YAML;
+- [x] Infrastructure:
+  - [x] K6 Operator Install;
 - [x] Prometheus Monitoring:
   - [x] Install Prometheus on K8s;
   - [x] Instrument Prometheus on project using ServiceMonitor CRD;
@@ -48,6 +70,7 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
   - [x] K8s resource analysis after Load Test;
 - [x] README.md:
   - [x] What's your decisions and process used in this project;
+  - [x] How to verify signed container images using cosign?
 
 Below have some descriptions and decisions about tools used in this project:
 
@@ -111,7 +134,23 @@ I used Github Actions to create CI on this project. When new push is performed i
 - Docker build;
 - Run Trivy scan to search any vulnerabilities;
 - Build and push to Docker Hub;
+- Sign the container image with Cosign;
+
+### How to verify the container image
+
+You can do that by using the cosign verify command against the published container image:
+
+```sh
+cosign verify ablackout3/giropops-senhas:latest \
+  --certificate-identity https://github.com/antonioazambuja/LINUXtips-giropops-senhas/.github/workflows/ci.yaml@refs/heads/develop \
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com | jq
+
+```
+
+PS.: Because we are doing a public repository, this will automatically be pushed to the public instance of the Rekor transparency log. More details about Rekor you can see [here](https://edu.chainguard.dev/open-source/sigstore/rekor/).
 
 ## Load Test
 
-I used K6 to run load test on application. Using K6 my objective was ensure application receive 1000 rpm 
+Objective: I used K6 to run load test on application. Using K6 my objective was ensure application receive 1000 rpm.
+
+Reality: K6 load test on application with 4000 rpm in each endpoint `GET /`, `GET /api/senhas` and, `POST /api/gerar-senha` using 2 value on K6 parallelism parameter with up up 8000 rpm withot any error.
