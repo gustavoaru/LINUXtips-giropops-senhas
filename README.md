@@ -27,14 +27,16 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
   - [ ] AlertManager Alarms to giropops-senhas;
   - [ ] Add more metrics to giropops-senhas;
   - [ ] Add more metrics to Redis;
+- [ ] Redis - Add support to PV and Statefulset on AWS EKS;
+- [ ] Add cert-manager;
+- [ ] Remove `exclude` Kube-linter config;
+- [ ] Github Actions:
+  - [ ] Use container Chainguard image on Github Actions;
+  - [ ] Add CRDs support on kube-linter;
 - [ ] Infrastructure:
-  - [ ] K6 Operator;
   - [ ] Fix vulnerabilities founds in each Chart using [Chainguard Images](https://images.chainguard.dev/);
 - [ ] Application:
   - [ ] CI:
-    - [ ] Run Load Test with K6:
-      - [ ] Using K6 Operator to run load test inside K8s cluster using K8s service endpoint;
-      - [ ] Using K6 local with ingress of giropops-senhas;
     - [ ] Migrate Public Docker Hub Repository to Private Docker Hub Registry or AWS ECR;
 - [ ] README.md:
   - [ ] Add README how to install dependencies to use Makefile;
@@ -42,8 +44,7 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 
 ### WIP
 
-- [ ] Github Actions:
-  - [ ] Add CRDs support on kube-linter;
+
 
 ### DONE
 
@@ -65,9 +66,10 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
   - [x] Install Prometheus on K8s;
   - [x] Instrument Prometheus on project using ServiceMonitor CRD;
 - [x] Chainguard Cosign - Signing Docker images;
-- [x] CI with Github Actions;
 - [x] Load Test with K6 (min TP: 1000 rpm without any errors):
   - [x] K8s resource analysis after Load Test;
+  - [x] Using K6 Operator to run load test inside K8s cluster using K8s service endpoint;
+  - [x] Using K6 local with ingress of giropops-senhas;
 - [x] README.md:
   - [x] What's your decisions and process used in this project;
   - [x] How to verify signed container images using cosign?
