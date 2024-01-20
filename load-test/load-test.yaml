@@ -1,0 +1,78 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: giropops-senhas-load-test-k6
+data:
+  giropops-senhas.js: |-
+    import http from "k6/http";
+
+    export const options = {
+      scenarios: {
+        index: {
+          executor: "constant-arrival-rate",
+          exec: "index",
+          rate: 4000,
+          timeUnit: '1m',
+          duration: '5m',
+          preAllocatedVUs: 50,
+          maxVUs: 200
+        },
+        generate_pwd: {
+          executor: "constant-arrival-rate",
+          exec: "generate_pwd",
+          rate: 4000,
+          timeUnit: '1m',
+          duration: '5m',
+          preAllocatedVUs: 50,
+          maxVUs: 200
+        },
+        get_pwd: {
+          executor: "constant-arrival-rate",
+          exec: "get_pwd",
+          rate: 4000,
+          timeUnit: '1m',
+          duration: '5m',
+          preAllocatedVUs: 50,
+          maxVUs: 200
+        },
+      },
+    };
+
+    export function index() {
+      http.get('http://giropops-senhas:5000/');
+    }
+
+    export function generate_pwd() {
+      const min = 20;
+      const max = 50;
+      const random = (min, max) => Math.floor(Math.random() * (max - min)) + min;
+      const payload = JSON.stringify({
+        tamanho: random,
+        incluir_numeros: true,
+        incluir_caracteres_especiais: true
+      });
+
+      const params = {
+        headers: {
+          "Content-Type": "application/json"
+        },
+      };
+
+      http.post('http://giropops-senhas:5000/api/gerar-senha', payload, params);
+    }
+
+    export function get_pwd() {
+      http.get('http://giropops-senhas:5000/api/senhas');
+    }
+---
+apiVersion: k6.io/v1alpha1
+kind: K6
+metadata:
+  name: giropops-senhas-load-test-k6
+spec:
+  parallelism: 2
+  script:
+    configMap:
+      name: giropops-senhas-load-test-k6
+      file: giropops-senhas.js

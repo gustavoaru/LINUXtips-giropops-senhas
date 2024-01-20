@@ -1,6 +1,6 @@
-name: Continuous Integration
+name: CI/CD
 
-on:
+on: # somente em alterações de pastas especificas
   push:
     branches:
       - "main"
@@ -9,6 +9,7 @@ on:
 env:
   VERSION_TAG: ${{ secrets.DOCKERHUB_USERNAME }}/giropops-senhas:0.${{ github.run_number }}
   LATEST_TAG: ${{ secrets.DOCKERHUB_USERNAME }}/giropops-senhas:latest
+  # AWS_REGION: us-east-1
 
 permissions:
   contents: read
@@ -17,11 +18,20 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
     environment: production
 
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+
+    - name: Install cosign
+      uses: sigstore/cosign-installer@main
+      with:
+        cosign-release: 'v2.2.2'
 
     - name: Login to Docker Hub
       uses: docker/login-action@v3
@@ -51,3 +61,55 @@ jobs:
         file: ./Dockerfile
         push: true
         tags: ${{ env.VERSION_TAG }},${{ env.LATEST_TAG }}
+
+    - name: Sign the container image ${{ env.LATEST_TAG }}
+      run: cosign sign --yes ${{ env.LATEST_TAG }}
+
+    - name: Sign the container image ${{ env.VERSION_TAG }}
+      run: cosign sign --yes ${{ env.VERSION_TAG }}
+
+    - name: 'Yamllint K8s manifests'
+      uses: karancode/yamllint-github-action@master
+      with:
+        yamllint_file_or_dir: 'manifests/'
+        yamllint_config_filepath: '.yamllint.yaml'
+
+    - name: 'Yamllint EKS Cluster'
+      uses: karancode/yamllint-github-action@master
+      with:
+        yamllint_file_or_dir: 'eks/'
+        yamllint_config_filepath: '.yamllint.yaml'
+
+    - name: 'Yamllint Kind Cluster'
+      uses: karancode/yamllint-github-action@master
+      with:
+        yamllint_file_or_dir: 'kind/'
+        yamllint_config_filepath: '.yamllint.yaml'
+
+    - name: 'Yamllint Load Test - K6 Operator manifests'
+      uses: karancode/yamllint-github-action@master
+      with:
+        yamllint_file_or_dir: 'load-test/'
+        yamllint_config_filepath: '.yamllint.yaml'
+
+    - name: kube-linter K8s manifests
+      uses: stackrox/kube-linter-action@v1
+      with:
+        directory: manifests
+        config: .kube-linter.yaml
+
+    - name: kube-linter K6 manifests
+      uses: stackrox/kube-linter-action@v1
+      with:
+        directory: load-test
+        config: .kube-linter.yaml
+
+    # - name: Create k8s Kind Cluster
+    #   uses: helm/kind-action@v1.8.0
+    #   with:
+    #     config: kind/cluster.yaml
+    # - run: |
+    #     make install-cluster-deps
+    #     make redis-deploy
+    #     make giropops-senhas-deploy-without-ingress
+    #     make run-load-test-k6-operator

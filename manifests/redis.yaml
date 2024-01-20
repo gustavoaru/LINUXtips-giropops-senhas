@@ -1,0 +1,129 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: redis
+  labels:
+    app: redis
+spec:
+  selector:
+    app: redis
+  clusterIP: None
+  ports:
+    - name: redis
+      port: 6379
+      targetPort: 6379
+    - name: redis-exporter
+      port: 9121
+      targetPort: 9121
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+  labels:
+    app: redis
+spec:
+  serviceName: "redis"
+  replicas: 1
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: cgr.dev/chainguard/redis:latest
+        resources:
+          requests:
+            cpu: "0.5m"
+            memory: "256M"
+          limits:
+            cpu: "0.8m"
+            memory: "512M"
+        ports:
+        - containerPort: 6379
+          name: redis-port
+        livenessProbe:
+          tcpSocket:
+            port: redis-port
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          periodSeconds: 3
+          failureThreshold: 5
+          successThreshold: 1
+        readinessProbe:
+          exec:
+            command:
+              - redis-cli
+              - ping
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          periodSeconds: 3
+          failureThreshold: 5
+          successThreshold: 1
+        imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          # runAsNonRoot: true
+          readOnlyRootFilesystem: false
+          runAsUser: 0
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+      - name: redis-exporter
+        image: oliver006/redis_exporter
+        resources:
+          requests:
+            cpu: "0.5m"
+            memory: "256M"
+          limits:
+            cpu: "0.8m"
+            memory: "512M"
+        ports:
+        - containerPort: 9121
+          name: exporter-port
+        livenessProbe:
+          httpGet:
+            path: /
+            port: exporter-port
+          initialDelaySeconds: 20
+          timeoutSeconds: 1
+        readinessProbe:
+          httpGet:
+            path: /
+            port: exporter-port
+          initialDelaySeconds: 20
+          timeoutSeconds: 1
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+  volumeClaimTemplates:
+  - metadata:
+      name: redis-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: ebs-sc
+      resources:
+        requests:
+          storage: 1Gi
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prometheus-redis-exporter
+  labels:
+    app: prometheus-redis-exporter
+    release: kube-prometheus
+spec:
+  endpoints:
+    - interval: 15s
+      port: redis-exporter
+  selector:
+    matchLabels:
+      app: redis

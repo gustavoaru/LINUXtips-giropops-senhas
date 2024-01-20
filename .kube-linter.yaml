@@ -1,0 +1,15 @@
+checks:
+  addAllBuiltIn: true
+  exclude:
+    - "no-anti-affinity"
+    - "default-service-account"
+    - "dnsconfig-options"
+    - "no-node-affinity"
+    - "non-isolated-pod"
+    - "required-label-owner"
+    - "use-namespace"
+    - "latest-tag"
+    - "required-annotation-email"
+    - "minimum-three-replicas"
+    - "no-read-only-root-fs"
+    - "run-as-non-root"
