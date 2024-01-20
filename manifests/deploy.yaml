@@ -6,7 +6,6 @@ metadata:
   labels:
     app: giropops-senhas
 spec:
-  replicas: 3
   selector:
     matchLabels:
       app: giropops-senhas
@@ -64,14 +63,14 @@ spec:
     kind: Deployment
     name: giropops-senhas
   minReplicas: 3
-  maxReplicas: 6
+  maxReplicas: 10
   metrics:
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 80
+          averageUtilization: 50
 ---
 kind: Service
 apiVersion: v1
