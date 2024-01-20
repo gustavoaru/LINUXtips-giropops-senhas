@@ -15,8 +15,8 @@ data:
           rate: 4000,
           timeUnit: '1m',
           duration: '5m',
-          preAllocatedVUs: 5,
-          maxVUs: 60
+          preAllocatedVUs: 50,
+          maxVUs: 200
         },
         generate_pwd: {
           executor: "constant-arrival-rate",
@@ -24,8 +24,8 @@ data:
           rate: 4000,
           timeUnit: '1m',
           duration: '5m',
-          preAllocatedVUs: 5,
-          maxVUs: 60
+          preAllocatedVUs: 50,
+          maxVUs: 200
         },
         get_pwd: {
           executor: "constant-arrival-rate",
@@ -33,8 +33,8 @@ data:
           rate: 4000,
           timeUnit: '1m',
           duration: '5m',
-          preAllocatedVUs: 5,
-          maxVUs: 60
+          preAllocatedVUs: 50,
+          maxVUs: 200
         },
       },
     };
