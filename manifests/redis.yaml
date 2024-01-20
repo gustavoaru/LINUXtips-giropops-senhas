@@ -26,6 +26,8 @@ metadata:
 spec:
   serviceName: "redis"
   replicas: 1
+  updateStrategy:
+    type: RollingUpdate
   selector:
     matchLabels:
       app: redis
@@ -86,6 +88,18 @@ spec:
         ports:
         - containerPort: 9121
           name: exporter-port
+        livenessProbe:
+          httpGet:
+            path: /
+            port: exporter-port
+          initialDelaySeconds: 20
+          timeoutSeconds: 1
+        readinessProbe:
+          httpGet:
+            path: /
+            port: exporter-port
+          initialDelaySeconds: 20
+          timeoutSeconds: 1
         volumeMounts:
         - name: redis-data
           mountPath: /data
