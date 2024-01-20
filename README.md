@@ -6,7 +6,8 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 
 ### BACKLOG
 
-- [ ] [k8sgps](https://github.com/k8sgpt-ai/k8sgpt);
+- [ ] [k8sgpt](https://github.com/k8sgpt-ai/k8sgpt);
+- [ ] Kyverno;
 - [ ] [kube-bench](https://github.com/aquasecurity/kube-bench);
 - [ ] Github Actions:
   - [ ] Use [GitHub's OIDC provider](https://github.com/aws-actions/configure-aws-credentials#OIDC) instead AWS IAM secrets;
@@ -23,12 +24,13 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
       - [ ] Install Kind on Github Action to test giropops-senhas;
 
 ### TODO
+- [ ] Remove spec.replicas Deployment when exist HPA;
 - [ ] Prometheus Monitoring:
-  - [ ] AlertManager Alarms to giropops-senhas;
+  - [ ] AlertManager Alarms to giropops-senhas and Redis;
   - [ ] Add more metrics to giropops-senhas;
-  - [ ] Add more metrics to Redis;
-- [ ] Redis - Add support to PV and Statefulset on AWS EKS;
 - [ ] Add cert-manager;
+- [ ] EKS:
+  - [ ] aws-efs-csi-driver addon: https://hervekhg.medium.com/stop-using-ebs-as-persistant-volume-for-eks-pod-use-efs-instead-fev-2023-d9ee4a9b9eeb;
 - [ ] Remove `exclude` Kube-linter config;
 - [ ] Github Actions:
   - [ ] Use container Chainguard image on Github Actions;
@@ -44,7 +46,8 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 
 ### WIP
 
-
+- [ ] Redis:
+  - [ ] User nonRoot with StatefulSet using Chainguard image;
 
 ### DONE
 
@@ -60,11 +63,15 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 - [x] Github Actions:
   - [x] Sign with Cosign;
   - [x] Lint Kube and YAML;
+- [x] Redis:
+  - [x] Create K8s headless service;
+  - [x] Add support to PV and Statefulset on AWS EKS;
 - [x] Infrastructure:
   - [x] K6 Operator Install;
 - [x] Prometheus Monitoring:
   - [x] Install Prometheus on K8s;
   - [x] Instrument Prometheus on project using ServiceMonitor CRD;
+  - [x] Add more metrics to Redis;
 - [x] Chainguard Cosign - Signing Docker images;
 - [x] Load Test with K6 (min TP: 1000 rpm without any errors):
   - [x] K8s resource analysis after Load Test;
