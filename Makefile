@@ -18,6 +18,7 @@ giropops-senhas-deploy-without-ingress:          ## Deploy giropops-senhas witho
 
 eks-create-cluster:              ## eksctl create cluster
 	eksctl create cluster -f eks/cluster.yaml
+	kubectl apply -f manifests/storageclass.yaml
 
 eks-delete-cluster:              ## eksctl delete cluster
 	eksctl delete cluster -f eks/cluster.yaml --disable-nodegroup-eviction
