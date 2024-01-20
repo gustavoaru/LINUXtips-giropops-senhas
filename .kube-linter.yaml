@@ -10,3 +10,6 @@ checks:
     - "use-namespace"
     - "latest-tag"
     - "required-annotation-email"
+    - "minimum-three-replicas"
+    - "no-read-only-root-fs"
+    - "run-as-non-root"
