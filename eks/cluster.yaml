@@ -40,9 +40,9 @@ iam:
 
 nodeGroups:
   - name: t3-small
-    minSize: 3
+    minSize: 6
     maxSize: 6
     instanceType: t3.small
     volumeType: gp2
-    desiredCapacity: 3
+    desiredCapacity: 6
     volumeSize: 80
