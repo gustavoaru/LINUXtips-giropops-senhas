@@ -1,65 +1,4 @@
 ---
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: redis
-  annotations:
-    ignore-check.kube-linter.io/minimum-three-replicas: "This deployment can run as one replica because it actually run as single node"
-    ignore-check.kube-linter.io/no-read-only-root-fs: "This deployment can need run with access to root filesystem because it actually run as default parameters"
-  labels:
-    app: redis
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: redis
-  strategy:
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
-    type: RollingUpdate
-  template:
-    metadata:
-      labels:
-        app: redis
-    spec:
-      containers:
-        - image: cgr.dev/chainguard/redis:latest
-          name: redis
-          resources:
-            requests:
-              cpu: "0.5m"
-              memory: "256M"
-            limits:
-              cpu: "0.8m"
-              memory: "512M"
-          ports:
-            - containerPort: 6379
-              name: redis
-          livenessProbe:
-            tcpSocket:
-              port: redis
-            initialDelaySeconds: 5
-            timeoutSeconds: 5
-            periodSeconds: 3
-            failureThreshold: 5
-            successThreshold: 1
-          readinessProbe:
-            exec:
-              command:
-                - redis-cli
-                - ping
-            initialDelaySeconds: 5
-            timeoutSeconds: 5
-            periodSeconds: 3
-            failureThreshold: 5
-            successThreshold: 1
-          securityContext:
-            allowPrivilegeEscalation: false
-            runAsNonRoot: true
-            # readOnlyRootFilesystem: true
-          imagePullPolicy: Always
----
 kind: Service
 apiVersion: v1
 metadata:
@@ -69,8 +8,108 @@ metadata:
 spec:
   selector:
     app: redis
-  type: ClusterIP
+  clusterIP: None
   ports:
     - name: redis
       port: 6379
       targetPort: 6379
+    - name: redis-exporter
+      port: 9121
+      targetPort: 9121
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+  labels:
+    app: redis
+spec:
+  serviceName: "redis"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: cgr.dev/chainguard/redis:latest
+        resources:
+          requests:
+            cpu: "0.5m"
+            memory: "256M"
+          limits:
+            cpu: "0.8m"
+            memory: "512M"
+        ports:
+        - containerPort: 6379
+          name: redis-port
+        livenessProbe:
+          tcpSocket:
+            port: redis-port
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          periodSeconds: 3
+          failureThreshold: 5
+          successThreshold: 1
+        readinessProbe:
+          exec:
+            command:
+              - redis-cli
+              - ping
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          periodSeconds: 3
+          failureThreshold: 5
+          successThreshold: 1
+        imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          # runAsNonRoot: true
+          readOnlyRootFilesystem: false
+          runAsUser: 0
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+      - name: redis-exporter
+        image: oliver006/redis_exporter
+        resources:
+          requests:
+            cpu: "0.5m"
+            memory: "256M"
+          limits:
+            cpu: "0.8m"
+            memory: "512M"
+        ports:
+        - containerPort: 9121
+          name: exporter-port
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+  volumeClaimTemplates:
+  - metadata:
+      name: redis-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: ebs-sc
+      resources:
+        requests:
+          storage: 1Gi
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prometheus-redis-exporter
+  labels:
+    app: prometheus-redis-exporter
+    release: kube-prometheus
+spec:
+  endpoints:
+    - interval: 15s
+      port: redis-exporter
+  selector:
+    matchLabels:
+      app: redis
