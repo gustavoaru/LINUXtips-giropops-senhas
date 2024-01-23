@@ -70,14 +70,15 @@ spec:
         imagePullPolicy: Always
         securityContext:
           allowPrivilegeEscalation: false
-          # runAsNonRoot: true
-          readOnlyRootFilesystem: false
-          runAsUser: 0
+          runAsGroup: 65532
+          runAsNonRoot: true
+          runAsUser: 65532
+          # readOnlyRootFilesystem: true
         volumeMounts:
         - name: redis-data
           mountPath: /data
       - name: redis-exporter
-        image: oliver006/redis_exporter
+        image: cgr.dev/chainguard/prometheus-redis-exporter:latest
         resources:
           requests:
             cpu: "0.5m"
@@ -103,6 +104,12 @@ spec:
         volumeMounts:
         - name: redis-data
           mountPath: /data
+      securityContext:
+        fsGroup: 65532
+        runAsGroup: 65532
+        runAsNonRoot: true
+        runAsUser: 65532
+        fsGroupChangePolicy: "OnRootMismatch"
   volumeClaimTemplates:
   - metadata:
       name: redis-data
