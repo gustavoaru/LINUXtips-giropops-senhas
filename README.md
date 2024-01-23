@@ -24,11 +24,11 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
       - [ ] Install Kind on Github Action to test giropops-senhas;
 
 ### TODO
-- [ ] Remove spec.replicas Deployment when exist HPA;
 - [ ] Prometheus Monitoring:
   - [ ] AlertManager Alarms to giropops-senhas and Redis;
   - [ ] Add more metrics to giropops-senhas;
-- [ ] Add cert-manager;
+- [ ] cert-manager;
+- [ ] Kustomize;
 - [ ] EKS:
   - [ ] aws-efs-csi-driver addon: https://hervekhg.medium.com/stop-using-ebs-as-persistant-volume-for-eks-pod-use-efs-instead-fev-2023-d9ee4a9b9eeb;
 - [ ] Remove `exclude` Kube-linter config;
@@ -46,12 +46,11 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 
 ### WIP
 
-- [ ] Redis:
-  - [ ] User nonRoot with StatefulSet using Chainguard image;
 
 ### DONE
 
 - [x] Project Fork;
+- [x] Remove spec.replicas Deployment when exist HPA;
 - [x] Repository Organization;
 - [x] Docker image:
   - [x] Otimization with multi-stage builds and Chainguard images;
@@ -64,6 +63,7 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
   - [x] Sign with Cosign;
   - [x] Lint Kube and YAML;
 - [x] Redis:
+  - [x] User nonRoot with StatefulSet using Chainguard image;
   - [x] Create K8s headless service;
   - [x] Add support to PV and Statefulset on AWS EKS;
 - [x] Infrastructure:
