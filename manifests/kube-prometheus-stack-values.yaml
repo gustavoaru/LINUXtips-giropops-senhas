@@ -1,0 +1,4 @@
+grafana:
+  sidecar:
+    dashboardsConfigMaps:
+      default: redis-dashboard
