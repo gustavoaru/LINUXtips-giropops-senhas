@@ -73,7 +73,7 @@ spec:
           runAsGroup: 65532
           runAsNonRoot: true
           runAsUser: 65532
-          # readOnlyRootFilesystem: true
+          readOnlyRootFilesystem: true
         volumeMounts:
         - name: redis-data
           mountPath: /data
@@ -104,6 +104,12 @@ spec:
         volumeMounts:
         - name: redis-data
           mountPath: /data
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsGroup: 65532
+          runAsNonRoot: true
+          runAsUser: 65532
+          readOnlyRootFilesystem: true
       securityContext:
         fsGroup: 65532
         runAsGroup: 65532
