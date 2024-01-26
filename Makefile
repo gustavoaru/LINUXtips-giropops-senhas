@@ -1,6 +1,7 @@
 METRICS_SERVER_VERSION = 3.11.0
-KUBE_PROMETHEUS_STACK_VERSION = 55.5.2
+KUBE_PROMETHEUS_STACK_VERSION = 56.1.0
 K6_OPERATOR_VERSION = 3.3.0
+INGRESS_NGINX_VERSION = 4.9.0
 
 all: eks-create-cluster install-cluster-deps redis-deploy giropops-senhas-deploy run-load-test
 
@@ -28,7 +29,8 @@ kind-create-cluster:             ## kind create cluster
 
 metrics-server-install:          ## Install Metrics Server
 	helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
-	helm upgrade --install metrics-server metrics-server/metrics-server --version $(METRICS_SERVER_VERSION)
+	helm upgrade --install metrics-server metrics-server/metrics-server \
+		--version $(METRICS_SERVER_VERSION) --wait
 
 k6-operator-install:          ## Install Metrics Server
 	helm repo add grafana https://grafana.github.io/helm-charts
@@ -36,13 +38,16 @@ k6-operator-install:          ## Install Metrics Server
 
 kube-prometheus-stack-install:   ## Install Kube Prometheus Stack
 	helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-	helm install kube-prometheus prometheus-community/kube-prometheus-stack
+	helm install kube-prometheus prometheus-community/kube-prometheus-stack \
+		-f manifests/kube-prometheus-stack-values.yaml \
+		--version $(KUBE_PROMETHEUS_STACK_VERSION) --wait
 
 ingress-nginx-install:           ## Install Ingress Nginx
 	helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 	helm upgrade --install ingress-nginx ingress-nginx \
 		--repo https://kubernetes.github.io/ingress-nginx \
-		--namespace ingress-nginx --create-namespace
+		--namespace ingress-nginx --create-namespace \
+		--version $(INGRESS_NGINX_VERSION) --wait
 
 install-cluster-deps: metrics-server-install kube-prometheus-stack-install ingress-nginx-install k6-operator-install           ## Install Cluster Dependencies
 
