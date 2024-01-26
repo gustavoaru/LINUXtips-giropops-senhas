@@ -11,4 +11,3 @@ checks:
     - "latest-tag"
     - "required-annotation-email"
     - "minimum-three-replicas"
-    - "run-as-non-root"
