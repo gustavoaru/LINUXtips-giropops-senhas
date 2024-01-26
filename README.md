@@ -7,6 +7,9 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 ### BACKLOG
 
 - [ ] [k8sgpt](https://github.com/k8sgpt-ai/k8sgpt);
+- [ ] [KubeArmor](https://github.com/kubearmor/KubeArmor);
+- [ ] [ChaosMesh](https://github.com/chaos-mesh/chaos-mesh);
+- [ ] [LitmusChaos](https://github.com/litmuschaos/litmus);
 - [ ] Kyverno;
 - [ ] [kube-bench](https://github.com/aquasecurity/kube-bench);
 - [ ] Github Actions:
@@ -24,14 +27,17 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
       - [ ] Install Kind on Github Action to test giropops-senhas;
 
 ### TODO
+- [ ] Redis:
+  - [ ] Run on cluster mode;
+- [ ] HPA:
+  - [ ] Improve HPA behavior;
 - [ ] Prometheus Monitoring:
-  - [ ] AlertManager Alarms to giropops-senhas and Redis;
   - [ ] Add more metrics to giropops-senhas;
+    - [ ] PrometheusRule to giropops-senhas;
+- [ ] Remove `exclude` Kube-linter config;
 - [ ] cert-manager;
-- [ ] Kustomize;
 - [ ] EKS:
   - [ ] aws-efs-csi-driver addon: https://hervekhg.medium.com/stop-using-ebs-as-persistant-volume-for-eks-pod-use-efs-instead-fev-2023-d9ee4a9b9eeb;
-- [ ] Remove `exclude` Kube-linter config;
 - [ ] Github Actions:
   - [ ] Use container Chainguard image on Github Actions;
   - [ ] Add CRDs support on kube-linter;
@@ -46,6 +52,15 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 
 ### WIP
 
+- [ ] Kustomize;
+- [ ] Github Actions:
+  - [ ] Create stage to jobs on build Github Actions;
+
+### TESTS
+
+- [ ] Prometheus Monitoring:
+  - [ ] PrometheusRule to Redis;
+- [ ] Remove `exclude` Kube-linter config;
 
 ### DONE
 
