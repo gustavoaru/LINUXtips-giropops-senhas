@@ -52,7 +52,6 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 
 ### WIP
 
-- [ ] Kustomize;
 - [ ] Github Actions:
   - [ ] Create stage to jobs on build Github Actions;
 
@@ -61,6 +60,7 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 - [ ] Prometheus Monitoring:
   - [ ] PrometheusRule to Redis;
 - [ ] Remove `exclude` Kube-linter config;
+- [ ] Kustomize;
 
 ### DONE
 

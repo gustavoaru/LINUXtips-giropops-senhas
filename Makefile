@@ -19,13 +19,14 @@ giropops-senhas-deploy-without-ingress:          ## Deploy giropops-senhas witho
 
 eks-create-cluster:              ## eksctl create cluster
 	eksctl create cluster -f eks/cluster.yaml
-	kubectl apply -f manifests/storageclass.yaml
+	kustomize build manifests/overlays/eks | kubectl apply -f -
 
 eks-delete-cluster:              ## eksctl delete cluster
 	eksctl delete cluster -f eks/cluster.yaml --disable-nodegroup-eviction
 
 kind-create-cluster:             ## kind create cluster
 	kind create cluster --config kind/cluster.yaml
+	kustomize build manifests/overlays/local | kubectl apply -f -
 
 metrics-server-install:          ## Install Metrics Server
 	helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
