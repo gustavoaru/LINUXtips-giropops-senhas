@@ -14,9 +14,6 @@ redis-deploy:                    ## Deploy Redis
 giropops-senhas-deploy:          ## Deploy giropops-senhas
 	kubectl apply -f manifests/deploy.yaml
 
-giropops-senhas-deploy-without-ingress:          ## Deploy giropops-senhas without ingress
-	kubectl apply -f manifests/deploy-without-ingress.yaml
-
 eks-create-cluster:              ## eksctl create cluster
 	eksctl create cluster -f eks/cluster.yaml
 	kustomize build manifests/overlays/eks | kubectl apply -f -
@@ -51,9 +48,6 @@ ingress-nginx-install:           ## Install Ingress Nginx
 		--version $(INGRESS_NGINX_VERSION) --wait
 
 install-cluster-deps: metrics-server-install kube-prometheus-stack-install ingress-nginx-install k6-operator-install           ## Install Cluster Dependencies
-
-run-load-test:                   ## Run Load Test
-	k6 run load-test/giropops-senhas.js
 
 run-load-test-k6-operator:       ## Run Load Test in the K6 Operator
 	kubectl apply -f load-test/

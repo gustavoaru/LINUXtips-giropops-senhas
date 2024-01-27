@@ -141,14 +141,23 @@ Total: 0 (UNKNOWN: 0, LOW: 0, MEDIUM: 0, HIGH: 0, CRITICAL: 0)
 
 For running this project look steps above:
 
-- Choose how to run your cluster. I'm running on Kind cluster locally:
+- Choose how to run your cluster. Where two options available actually `EKS` and `Kind(local)`. To run any option you can use my `Makefile`:
 ```
-kind create cluster --config kind/cluster.yaml
+make eks-create-cluster
+make kind-create-cluster
 ```
-- Install kube-prometheus to instrument your application on Prometheus with ServiceMonitor CRD. More details about installation method in the Github repository: https://github.com/prometheus-operator/kube-prometheus.
-- 
+- Install cluster dependencies. This command will install Ingress Nginx, Metrics Server, K6 Operator and kube-prometheus-stack:
 ```
-git clone 
+make install-cluster-deps
+```
+- Your cluster is ready! Now run this target on Makefile to deploy giropops stack:
+```
+make redis-deploy
+make giropops-senhas-deploy
+```
+- For fun run my load test and look your application with load:
+```
+make run-load-test-k6-operator
 ```
 
 ## CI
@@ -166,7 +175,7 @@ You can do that by using the cosign verify command against the published contain
 
 ```sh
 cosign verify ablackout3/giropops-senhas:latest \
-  --certificate-identity https://github.com/antonioazambuja/LINUXtips-giropops-senhas/.github/workflows/ci.yaml@refs/heads/develop \
+  --certificate-identity https://github.com/antonioazambuja/LINUXtips-giropops-senhas/.github/workflows/ci.yaml@refs/heads/main \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com | jq
 
 ```
