@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   yaml-lint:
-    name: YAML & Kubernetes Lint
+    name: YAML Lint
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -62,7 +62,7 @@ jobs:
         yamllint_config_filepath: '.yamllint.yaml'
 
   k8s-lint:
-    name: YAML & Kubernetes Lint
+    name: Kubernetes Lint
     runs-on: ubuntu-latest
     permissions:
       contents: read
