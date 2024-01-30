@@ -7,6 +7,9 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 ### BACKLOG
 
 - [ ] [k8sgpt](https://github.com/k8sgpt-ai/k8sgpt);
+- [ ] [KubeArmor](https://github.com/kubearmor/KubeArmor);
+- [ ] [ChaosMesh](https://github.com/chaos-mesh/chaos-mesh);
+- [ ] [LitmusChaos](https://github.com/litmuschaos/litmus);
 - [ ] Kyverno;
 - [ ] [kube-bench](https://github.com/aquasecurity/kube-bench);
 - [ ] Github Actions:
@@ -24,14 +27,18 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
       - [ ] Install Kind on Github Action to test giropops-senhas;
 
 ### TODO
-- [ ] Remove spec.replicas Deployment when exist HPA;
+- [ ] Redis:
+  - [ ] Run on cluster mode;
+- [ ] HPA:
+  - [ ] Improve HPA behavior;
+  - [ ] Use custom metrics on HPA;
 - [ ] Prometheus Monitoring:
-  - [ ] AlertManager Alarms to giropops-senhas and Redis;
   - [ ] Add more metrics to giropops-senhas;
-- [ ] Add cert-manager;
+    - [ ] PrometheusRule to giropops-senhas;
+- [ ] Remove `exclude` Kube-linter config;
+- [ ] cert-manager;
 - [ ] EKS:
   - [ ] aws-efs-csi-driver addon: https://hervekhg.medium.com/stop-using-ebs-as-persistant-volume-for-eks-pod-use-efs-instead-fev-2023-d9ee4a9b9eeb;
-- [ ] Remove `exclude` Kube-linter config;
 - [ ] Github Actions:
   - [ ] Use container Chainguard image on Github Actions;
   - [ ] Add CRDs support on kube-linter;
@@ -46,12 +53,16 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 
 ### WIP
 
-- [ ] Redis:
-  - [ ] User nonRoot with StatefulSet using Chainguard image;
+
+### TESTS
+
+- [ ] Github Actions:
+  - [ ] Create stage to jobs on build Github Actions;
 
 ### DONE
 
 - [x] Project Fork;
+- [x] Remove spec.replicas Deployment when exist HPA;
 - [x] Repository Organization;
 - [x] Docker image:
   - [x] Otimization with multi-stage builds and Chainguard images;
@@ -64,6 +75,7 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
   - [x] Sign with Cosign;
   - [x] Lint Kube and YAML;
 - [x] Redis:
+  - [x] User nonRoot with StatefulSet using Chainguard image;
   - [x] Create K8s headless service;
   - [x] Add support to PV and Statefulset on AWS EKS;
 - [x] Infrastructure:
@@ -72,6 +84,7 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
   - [x] Install Prometheus on K8s;
   - [x] Instrument Prometheus on project using ServiceMonitor CRD;
   - [x] Add more metrics to Redis;
+  - [x] PrometheusRule to Redis;
 - [x] Chainguard Cosign - Signing Docker images;
 - [x] Load Test with K6 (min TP: 1000 rpm without any errors):
   - [x] K8s resource analysis after Load Test;
@@ -80,6 +93,7 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 - [x] README.md:
   - [x] What's your decisions and process used in this project;
   - [x] How to verify signed container images using cosign?
+- [x] Kustomize;
 
 Below have some descriptions and decisions about tools used in this project:
 
@@ -126,14 +140,23 @@ Total: 0 (UNKNOWN: 0, LOW: 0, MEDIUM: 0, HIGH: 0, CRITICAL: 0)
 
 For running this project look steps above:
 
-- Choose how to run your cluster. I'm running on Kind cluster locally:
+- Choose how to run your cluster. Where two options available actually `EKS` and `Kind(local)`. To run any option you can use my `Makefile`:
 ```
-kind create cluster --config kind/cluster.yaml
+make eks-create-cluster
+make kind-create-cluster
 ```
-- Install kube-prometheus to instrument your application on Prometheus with ServiceMonitor CRD. More details about installation method in the Github repository: https://github.com/prometheus-operator/kube-prometheus.
-- 
+- Install cluster dependencies. This command will install Ingress Nginx, Metrics Server, K6 Operator and kube-prometheus-stack:
 ```
-git clone 
+make install-cluster-deps
+```
+- Your cluster is ready! Now run this target on Makefile to deploy giropops stack:
+```
+make redis-deploy
+make giropops-senhas-deploy
+```
+- For fun run my load test and look your application with load:
+```
+make run-load-test-k6-operator
 ```
 
 ## CI
@@ -151,7 +174,7 @@ You can do that by using the cosign verify command against the published contain
 
 ```sh
 cosign verify ablackout3/giropops-senhas:latest \
-  --certificate-identity https://github.com/antonioazambuja/LINUXtips-giropops-senhas/.github/workflows/ci.yaml@refs/heads/develop \
+  --certificate-identity https://github.com/antonioazambuja/LINUXtips-giropops-senhas/.github/workflows/ci.yaml@refs/heads/main \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com | jq
 
 ```
