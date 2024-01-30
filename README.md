@@ -31,6 +31,7 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
   - [ ] Run on cluster mode;
 - [ ] HPA:
   - [ ] Improve HPA behavior;
+  - [ ] Use custom metrics on HPA;
 - [ ] Prometheus Monitoring:
   - [ ] Add more metrics to giropops-senhas;
     - [ ] PrometheusRule to giropops-senhas;
