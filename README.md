@@ -56,10 +56,6 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 
 ### TESTS
 
-- [ ] Prometheus Monitoring:
-  - [ ] PrometheusRule to Redis;
-- [ ] Remove `exclude` Kube-linter config;
-- [ ] Kustomize;
 - [ ] Github Actions:
   - [ ] Create stage to jobs on build Github Actions;
 
@@ -88,6 +84,7 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
   - [x] Install Prometheus on K8s;
   - [x] Instrument Prometheus on project using ServiceMonitor CRD;
   - [x] Add more metrics to Redis;
+  - [x] PrometheusRule to Redis;
 - [x] Chainguard Cosign - Signing Docker images;
 - [x] Load Test with K6 (min TP: 1000 rpm without any errors):
   - [x] K8s resource analysis after Load Test;
@@ -96,6 +93,7 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 - [x] README.md:
   - [x] What's your decisions and process used in this project;
   - [x] How to verify signed container images using cosign?
+- [x] Kustomize;
 
 Below have some descriptions and decisions about tools used in this project:
 
