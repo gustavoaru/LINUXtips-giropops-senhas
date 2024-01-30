@@ -1,21 +1,30 @@
+import redis, string, random, time, logging
 from flask import Flask, render_template, request, jsonify
-import redis
-import string
-import random
-import os
-from prometheus_client import Counter, start_http_server, generate_latest
+from os import environ
+from prometheus_client import Counter, Histogram, start_http_server, generate_latest
 
 
+LOGLEVEL=environ.get('LOGLEVEL', 'INFO')
+logging.basicConfig(format='[%(threadName)s] [%(asctime)s] [%(filename)s:%(lineno)d] %(levelname)s - %(message)s', level=LOGLEVEL)
 app = Flask(__name__)
 
-redis_host = os.environ.get('REDIS_HOST', 'redis-service')
+redis_host = environ.get('REDIS_HOST', 'redis-service')
 redis_port = 6379
 redis_password = ""
 
 r = redis.StrictRedis(host=redis_host, port=redis_port, password=redis_password, decode_responses=True)
 
-senha_gerada_counter = Counter('senha_gerada', 'Contador de senhas geradas')
-
+SENHA_GERADA_COUNTER = Counter('senha_gerada', 'Contador de senhas geradas')
+HTTP_REQUEST_COUNT = Counter(
+    'http_request_count',
+    'HTTP request count',
+    ['method', 'endpoint', 'http_status_code']
+)
+HTTP_REQUEST_LATENCY_SECONDS = Histogram(
+    'http_request_latency_seconds',
+    'Time spent to process HTTP request',
+    ['method', 'endpoint', 'http_status_code']
+)
 
 def criar_senha(tamanho, incluir_numeros, incluir_caracteres_especiais):
     caracteres = string.ascii_letters
@@ -32,41 +41,67 @@ def criar_senha(tamanho, incluir_numeros, incluir_caracteres_especiais):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    if request.method == 'POST':
-        tamanho = int(request.form.get('tamanho', 8))
-        incluir_numeros = request.form.get('incluir_numeros') == 'on'
-        incluir_caracteres_especiais = request.form.get('incluir_caracteres_especiais') == 'on'
-        senha = criar_senha(tamanho, incluir_numeros, incluir_caracteres_especiais)
+    try:
+        start_time = time.time()
+        if request.method == 'POST':
+            tamanho = int(request.form.get('tamanho', 8))
+            incluir_numeros = request.form.get('incluir_numeros') == 'on'
+            incluir_caracteres_especiais = request.form.get('incluir_caracteres_especiais') == 'on'
+            senha = criar_senha(tamanho, incluir_numeros, incluir_caracteres_especiais)
 
-        r.lpush("senhas", senha)
-        senha_gerada_counter.inc()
-    senhas = r.lrange("senhas", 0, 9)
-    if senhas:
-        senhas_geradas = [{"id": index + 1, "senha": senha} for index, senha in enumerate(senhas)]
-        return render_template('index.html', senhas_geradas=senhas_geradas, senha=senhas_geradas[0]['senha'] or '' )
-    return render_template('index.html')
+            r.lpush("senhas", senha)
+            SENHA_GERADA_COUNTER.inc()
+        senhas = r.lrange("senhas", 0, 9)
+        status_code = 200
+        if senhas:
+            senhas_geradas = [{"id": index + 1, "senha": senha} for index, senha in enumerate(senhas)]
+            return render_template('index.html', senhas_geradas=senhas_geradas, senha=senhas_geradas[0]['senha'] or '' )
+        return render_template('index.html')
+    except Exception as error:
+        status_code = 500
+        logging.error(f"An error occurred: {error}")
+    finally:
+        HTTP_REQUEST_COUNT.labels(request.method, '/', status_code).inc()
+        HTTP_REQUEST_LATENCY_SECONDS.labels(request.method, '/', status_code).observe(time.time() - start_time)
 
 
 @app.route('/api/gerar-senha', methods=['POST'])
 def gerar_senha_api():
-    dados = request.get_json()
+    try:
+        start_time = time.time()
+        dados = request.get_json()
 
-    tamanho = int(dados.get('tamanho', 8))
-    incluir_numeros = dados.get('incluir_numeros', False)
-    incluir_caracteres_especiais = dados.get('incluir_caracteres_especiais', False)
+        tamanho = int(dados.get('tamanho', 8))
+        incluir_numeros = dados.get('incluir_numeros', False)
+        incluir_caracteres_especiais = dados.get('incluir_caracteres_especiais', False)
 
-    senha = criar_senha(tamanho, incluir_numeros, incluir_caracteres_especiais)
-    r.lpush("senhas", senha)
-    senha_gerada_counter.inc()
-
-    return jsonify({"senha": senha})
+        senha = criar_senha(tamanho, incluir_numeros, incluir_caracteres_especiais)
+        r.lpush("senhas", senha)
+        SENHA_GERADA_COUNTER.inc()
+        status_code = 200
+        return jsonify({"senha": senha})
+    except Exception as error:
+        status_code = 500
+        logging.error(f"An error occurred: {error}")
+    else:
+        HTTP_REQUEST_COUNT.labels(request.method, '/api/gerar-senha', status_code).inc()
+        HTTP_REQUEST_LATENCY_SECONDS.labels(request.method, '/api/gerar-senha', status_code).observe(time.time() - start_time)
 
 @app.route('/api/senhas', methods=['GET'])
 def listar_senhas():
-    senhas = r.lrange("senhas", 0, 9)
+    try:
+        start_time = time.time()
+        senhas = r.lrange("senhas", 0, 9)
 
-    resposta = [{"id": index + 1, "senha": senha} for index, senha in enumerate(senhas)]
-    return jsonify(resposta)
+        resposta = [{"id": index + 1, "senha": senha} for index, senha in enumerate(senhas)]
+        status_code = 200
+        return jsonify(resposta)
+    except Exception as error:
+        status_code = 500
+        logging.error(f"An error occurred: {error}")
+    else:
+        HTTP_REQUEST_COUNT.labels(request.method, '/api/senhas', status_code).inc()
+        HTTP_REQUEST_LATENCY_SECONDS.labels(request.method, '/api/senhas', status_code).observe(time.time() - start_time)
 
 @app.route('/metrics')
 def metrics():
