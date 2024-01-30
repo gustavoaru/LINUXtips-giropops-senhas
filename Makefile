@@ -6,16 +6,15 @@ INGRESS_NGINX_VERSION = 4.9.0
 help:                            ## Show help of target details
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
-redis-deploy:                    ## Deploy Redis
-	kubectl apply -f manifests/redis.yaml
-
-giropops-senhas-deploy:          ## Deploy giropops-senhas
-	kubectl apply -f manifests/deploy.yaml
+wait-deploy:                     ## Wait ready Redis and giropops-senhas
+	kubectl wait --for=condition=ready pod -l app=redis --timeout 5m
+	kubectl wait --for=condition=ready pod -l app=giropops-senhas --timeout 5m
 
 eks-create-cluster:              ## eksctl create cluster
 	eksctl create cluster -f eks/cluster.yaml
 	$(MAKE) install-cluster-deps
 	kustomize build manifests/overlays/eks | kubectl apply -f -
+	$(MAKE) wait-deploy
 
 eks-delete-cluster:              ## eksctl delete cluster
 	eksctl delete cluster -f eks/cluster.yaml --disable-nodegroup-eviction
@@ -24,6 +23,7 @@ kind-create-cluster:             ## kind create cluster
 	kind create cluster --config kind/cluster.yaml
 	$(MAKE) install-cluster-deps
 	kustomize build manifests/overlays/local | kubectl apply -f -
+	$(MAKE) wait-deploy
 
 metrics-server-install:          ## Install Metrics Server
 	helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
