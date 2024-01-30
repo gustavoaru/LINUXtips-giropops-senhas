@@ -67,9 +67,10 @@ spec:
   minReplicas: 3
   maxReplicas: 10
   metrics:
-    - type: Resource
-      resource:
+    - type: ContainerResource
+      containerResource:
         name: cpu
+        container: giropops-senhas
         target:
           type: Utilization
           averageUtilization: 50
