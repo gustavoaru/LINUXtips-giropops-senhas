@@ -114,6 +114,7 @@ metadata:
   name: giropops-senhas
   labels:
     app: giropops-senhas
+    release: kube-prometheus
 spec:
   selector:
     matchLabels:
