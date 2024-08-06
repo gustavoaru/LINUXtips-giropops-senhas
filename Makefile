@@ -1,7 +1,7 @@
 METRICS_SERVER_VERSION = 3.11.0
 KUBE_PROMETHEUS_STACK_VERSION = 56.1.0
 K6_OPERATOR_VERSION = 3.3.0
-INGRESS_NGINX_VERSION = 4.9.0
+INGRESS_NGINX_VERSION = 4.11.1
 
 help:                            ## Show help of target details
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
@@ -40,14 +40,15 @@ kube-prometheus-stack-install:   ## Install Kube Prometheus Stack
 	helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 	helm repo update
 	helm install kube-prometheus prometheus-community/kube-prometheus-stack \
+		--namespace monitoring --create-namespace \
 		-f manifests/kube-prometheus-stack-values.yaml \
 		--version $(KUBE_PROMETHEUS_STACK_VERSION) --wait
 
 ingress-nginx-install:           ## Install Ingress Nginx
 	helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 	helm repo update
-	helm upgrade --install ingress-nginx ingress-nginx \
-		--repo https://kubernetes.github.io/ingress-nginx \
+	helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
+		--values https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/hack/manifest-templates/provider/kind/values.yaml \
 		--namespace ingress-nginx --create-namespace \
 		--version $(INGRESS_NGINX_VERSION) --wait
 
