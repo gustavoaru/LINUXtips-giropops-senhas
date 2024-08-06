@@ -29,6 +29,8 @@ metrics-server-install:          ## Install Metrics Server
 	helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
 	helm repo update
 	helm upgrade --install metrics-server metrics-server/metrics-server \
+		--namespace monitoring --create-namespace \
+		-f manifests/metrics-server-values.yaml \
 		--version $(METRICS_SERVER_VERSION) --wait
 
 k6-operator-install:             ## Install Metrics Server
