@@ -185,4 +185,4 @@ PS.: Because we are doing a public repository, this will automatically be pushed
 
 Objective: I used K6 to run load test on application. Using K6 my objective was ensure application receive 1000 rpm.
 
-Reality: K6 load test on application with 4000 rpm in each endpoint `GET /`, `GET /api/senhas` and, `POST /api/gerar-senha` using 2 value on K6 parallelism parameter with up up 8000 rpm withot any error.
+Reality: K6 load test on application with 4000 rpm in each endpoint `GET /`, `GET /api/senhas` and, `POST /api/gerar-senha` using 2 value on K6 parallelism parameter with up up 8000 rpm without any error.
