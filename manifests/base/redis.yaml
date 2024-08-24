@@ -74,9 +74,6 @@ spec:
           runAsNonRoot: true
           runAsUser: 65532
           readOnlyRootFilesystem: true
-        volumeMounts:
-        - name: redis-data
-          mountPath: /data
       - name: redis-exporter
         image: cgr.dev/chainguard/prometheus-redis-exporter:latest
         resources:
@@ -101,9 +98,6 @@ spec:
             port: exporter-port
           initialDelaySeconds: 20
           timeoutSeconds: 1
-        volumeMounts:
-        - name: redis-data
-          mountPath: /data
         securityContext:
           allowPrivilegeEscalation: false
           runAsGroup: 65532
@@ -116,15 +110,6 @@ spec:
         runAsNonRoot: true
         runAsUser: 65532
         fsGroupChangePolicy: "OnRootMismatch"
-  volumeClaimTemplates:
-  - metadata:
-      name: redis-data
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      storageClassName: ebs-sc
-      resources:
-        requests:
-          storage: 1Gi
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor

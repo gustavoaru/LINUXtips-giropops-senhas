@@ -1,0 +1,29 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prometheus-redis-exporter
+spec:
+  endpoints:
+    - interval: 10s
+---
+apiVersion: v1
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+  labels:
+    app: redis
+spec:
+  template:
+    spec:
+      containers:
+      - name: redis
+        image: cgr.dev/chainguard/redis:latest
+        env:
+          - name: REDIS_ARGS
+            valueFrom:
+              configMapKeyRef:
+                name: redis-configmap
+                key: REDIS_ARGS

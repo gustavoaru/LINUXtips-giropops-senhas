@@ -128,7 +128,8 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - http:
+    - host: giropops-senhas.antonioazambuja.dev
+      http:
         paths:
           - path: "/"
             pathType: Prefix
