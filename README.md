@@ -53,11 +53,10 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 
 ### WIP
 
+- [ ] Add support for Storage on Kind;
 
 ### TESTS
 
-- [ ] Github Actions:
-  - [ ] Create stage to jobs on build Github Actions;
 
 ### DONE
 
@@ -74,6 +73,7 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 - [x] Github Actions:
   - [x] Sign with Cosign;
   - [x] Lint Kube and YAML;
+  - [x] Create stage to jobs on build Github Actions;
 - [x] Redis:
   - [x] User nonRoot with StatefulSet using Chainguard image;
   - [x] Create K8s headless service;
