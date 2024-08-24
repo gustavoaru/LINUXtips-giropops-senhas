@@ -7,6 +7,8 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 ### BACKLOG
 
 - [ ] [k8sgpt](https://github.com/k8sgpt-ai/k8sgpt);
+- [ ] [Furiko](https://furiko.io/);
+- [ ] [Knative](https://knative.dev/docs/);
 - [ ] [KubeArmor](https://github.com/kubearmor/KubeArmor);
 - [ ] [ChaosMesh](https://github.com/chaos-mesh/chaos-mesh);
 - [ ] [LitmusChaos](https://github.com/litmuschaos/litmus);
@@ -29,10 +31,17 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 ### TODO
 - [ ] Redis:
   - [ ] Run on cluster mode;
+- [ ] Write articles:
+  - [ ] Load tests;
+  - [ ] Kustomize;
+  - [ ] Chaos Engineering;
 - [ ] HPA:
   - [ ] Improve HPA behavior;
   - [ ] Use custom metrics on HPA;
 - [ ] Prometheus Monitoring:
+  - [ ] Dashboards:
+    - [ ] giropops-senhas;
+    - [ ] Redis;
   - [ ] Add more metrics to giropops-senhas;
     - [ ] PrometheusRule to giropops-senhas;
 - [ ] Remove `exclude` Kube-linter config;
@@ -53,7 +62,6 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 
 ### WIP
 
-- [ ] Add support for Storage on Kind;
 
 ### TESTS
 
