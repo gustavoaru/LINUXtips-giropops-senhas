@@ -19,6 +19,18 @@ spec:
       labels:
         app: giropops-senhas
     spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - giropops-senhas
+              topologyKey: kubernetes.io/hostname
       containers:
         - image: ablackout3/giropops-senhas:latest
           name: giropops-senhas

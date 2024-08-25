@@ -1,7 +1,6 @@
 checks:
   addAllBuiltIn: true
   exclude:
-    - "no-anti-affinity"
     - "default-service-account"
     - "dnsconfig-options"
     - "no-node-affinity"
