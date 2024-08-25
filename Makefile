@@ -7,8 +7,8 @@ help:                            ## Show help of target details
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 wait-deploy:                     ## Wait ready Redis and giropops-senhas
-	kubectl wait --for=condition=ready pod -l app=redis --timeout 5m
-	kubectl wait --for=condition=ready pod -l app=giropops-senhas --timeout 5m
+	kubectl wait --for=condition=ready pod -l app=redis -n develop --timeout 5m
+	kubectl wait --for=condition=ready pod -l app=giropops-senhas -n develop --timeout 5m
 
 eks-create-cluster:              ## eksctl create cluster
 	eksctl create cluster -f eks/cluster.yaml
@@ -21,6 +21,11 @@ eks-delete-cluster:              ## eksctl delete cluster
 
 kind-create-cluster:             ## kind create cluster
 	kind create cluster --config kind/cluster-with-ingress.yaml
+	$(MAKE) install-cluster-deps
+	kustomize build manifests/overlays/local | kubectl apply -f -
+	$(MAKE) wait-deploy
+
+test-app-github-actions:             ## Application test on github actions
 	$(MAKE) install-cluster-deps
 	kustomize build manifests/overlays/local | kubectl apply -f -
 	$(MAKE) wait-deploy
@@ -63,5 +68,5 @@ install-cluster-deps:            ## Install Cluster Dependencies
 run-load-test-k6-operator:       ## Run Load Test in the K6 Operator
 	kubectl apply -f load-test/
 	sleep 10
-	kubectl wait --for=condition=complete job -l k6_cr=giropops-senhas-load-test-k6 --timeout 10m
+	kubectl wait --for=condition=complete job -l k6_cr=giropops-senhas-load-test-k6 -n develop --timeout 10m
 	kubectl delete -f load-test/

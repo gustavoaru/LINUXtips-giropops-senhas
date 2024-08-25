@@ -30,5 +30,4 @@ jobs:
       with:
         config: kind/cluster.yaml
     - run: |
-        make kind-create-cluster
-        make run-load-test-k6-operator
+        make test-app-github-actions
