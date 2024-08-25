@@ -7,6 +7,7 @@ on: # somente em alterações de pastas especificas
       - 'develop'
     paths:
       - '**.yaml'
+      - 'Makefile'
 
 permissions:
   contents: read
