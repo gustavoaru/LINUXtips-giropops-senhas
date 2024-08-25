@@ -26,7 +26,9 @@ kind-create-cluster:             ## kind create cluster
 	$(MAKE) wait-deploy
 
 test-app-github-actions:             ## Application test on github actions
-	$(MAKE) install-cluster-deps
+	$(MAKE) metrics-server-install
+	$(MAKE) kube-prometheus-stack-install
+	$(MAKE) k6-operator-install
 	kustomize build manifests/overlays/local | kubectl apply -f -
 	$(MAKE) wait-deploy
 
