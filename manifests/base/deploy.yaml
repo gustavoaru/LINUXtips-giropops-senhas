@@ -37,7 +37,7 @@ spec:
           name: giropops-senhas
           env:
             - name: REDIS_HOST
-              value: "redis.default.svc.cluster.local"
+              value: "redis.develop.svc.cluster.local"
           resources:
             requests:
               cpu: "120m"
