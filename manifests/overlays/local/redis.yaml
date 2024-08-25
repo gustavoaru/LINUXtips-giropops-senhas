@@ -3,6 +3,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: prometheus-redis-exporter
+  namespace: develop
 spec:
   endpoints:
     - interval: 10s
@@ -13,6 +14,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: redis
+  namespace: develop
   labels:
     app: redis
 spec:

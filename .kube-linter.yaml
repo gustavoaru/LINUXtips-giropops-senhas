@@ -6,7 +6,6 @@ checks:
     - "no-node-affinity"
     - "non-isolated-pod"
     - "required-label-owner"
-    - "use-namespace"
     - "latest-tag"
     - "required-annotation-email"
     - "minimum-three-replicas"

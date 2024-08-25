@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: giropops-senhas
+  namespace: develop
   labels:
     app: giropops-senhas
 spec:
@@ -69,6 +70,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: giropops-senhas
+  namespace: develop
   labels:
     app: giropops-senhas
 spec:
@@ -104,6 +106,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: giropops-senhas
+  namespace: develop
   labels:
     app: giropops-senhas
 spec:
@@ -119,6 +122,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: giropops-senhas
+  namespace: develop
   labels:
     app: giropops-senhas
     release: kube-prometheus
@@ -135,6 +139,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: giropops-senhas
+  namespace: develop
   labels:
     name: giropops-senhas
 spec:

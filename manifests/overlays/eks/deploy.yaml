@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: giropops-senhas
+  namespace: develop
   labels:
     app: giropops-senhas
 spec:
