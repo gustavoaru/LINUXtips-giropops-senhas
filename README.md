@@ -44,7 +44,6 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
     - [ ] Redis;
   - [ ] Add more metrics to giropops-senhas;
     - [ ] PrometheusRule to giropops-senhas;
-- [ ] Remove `exclude` Kube-linter config;
 - [ ] cert-manager;
 - [ ] EKS:
   - [ ] aws-efs-csi-driver addon: https://hervekhg.medium.com/stop-using-ebs-as-persistant-volume-for-eks-pod-use-efs-instead-fev-2023-d9ee4a9b9eeb;
@@ -62,6 +61,7 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 
 ### WIP
 
+- [ ] Remove `exclude` Kube-linter config;
 
 ### TESTS
 
