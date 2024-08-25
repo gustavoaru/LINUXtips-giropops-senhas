@@ -20,7 +20,7 @@ eks-delete-cluster:              ## eksctl delete cluster
 	eksctl delete cluster -f eks/cluster.yaml --disable-nodegroup-eviction
 
 kind-create-cluster:             ## kind create cluster
-	kind create cluster --config kind/cluster.yaml
+	kind create cluster --config kind/cluster-with-ingress.yaml
 	$(MAKE) install-cluster-deps
 	kustomize build manifests/overlays/local | kubectl apply -f -
 	$(MAKE) wait-deploy
