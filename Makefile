@@ -71,4 +71,5 @@ run-load-test-k6-operator:       ## Run Load Test in the K6 Operator
 	kubectl apply -f load-test/
 	sleep 10
 	kubectl wait --for=condition=complete job -l k6_cr=giropops-senhas-load-test-k6 -n develop --timeout 10m
+	kubectl logs -l k6_cr=giropops-senhas-load-test-k6 -n develop --timestamps=true
 	kubectl delete -f load-test/
