@@ -123,6 +123,5 @@ jobs:
       uses: helm/kind-action@v1.10.0
       with:
         config: kind/cluster.yaml
-    - run: |
-        make test-app-github-actions && \
-        make run-load-test-k6-operator
+    - run: make test-app-github-actions
+    - run: make run-load-test-k6-operator
