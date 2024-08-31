@@ -31,6 +31,7 @@ test-app-github-actions:             ## Application test on github actions
 	$(MAKE) k6-operator-install
 	kustomize build manifests/overlays/local | kubectl apply -f -
 	$(MAKE) wait-deploy
+	$(MAKE) run-load-test-k6-operator
 
 metrics-server-install:          ## Install Metrics Server
 	helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/

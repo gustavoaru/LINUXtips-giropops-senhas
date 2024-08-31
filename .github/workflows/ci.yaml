@@ -124,4 +124,3 @@ jobs:
       with:
         config: kind/cluster.yaml
     - run: make test-app-github-actions
-    - run: make run-load-test-k6-operator
