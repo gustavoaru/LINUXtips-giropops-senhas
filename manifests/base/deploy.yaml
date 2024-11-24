@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: giropops-senhas
+  namespace: develop
   labels:
     app: giropops-senhas
 spec:
@@ -19,12 +20,24 @@ spec:
       labels:
         app: giropops-senhas
     spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - giropops-senhas
+              topologyKey: kubernetes.io/hostname
       containers:
         - image: ablackout3/giropops-senhas:latest
           name: giropops-senhas
           env:
             - name: REDIS_HOST
-              value: "redis.default.svc.cluster.local"
+              value: "redis.develop.svc.cluster.local"
           resources:
             requests:
               cpu: "120m"
@@ -57,6 +70,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: giropops-senhas
+  namespace: develop
   labels:
     app: giropops-senhas
 spec:
@@ -67,15 +81,10 @@ spec:
   minReplicas: 3
   maxReplicas: 10
   metrics:
-    - type: Resource
-      resource:
+    - type: ContainerResource
+      containerResource:
         name: cpu
-        target:
-          type: Utilization
-          averageUtilization: 50
-    - type: Resource
-      resource:
-        name: memory
+        container: giropops-senhas
         target:
           type: Utilization
           averageUtilization: 50
@@ -97,6 +106,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: giropops-senhas
+  namespace: develop
   labels:
     app: giropops-senhas
 spec:
@@ -112,6 +122,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: giropops-senhas
+  namespace: develop
   labels:
     app: giropops-senhas
     release: kube-prometheus
@@ -123,22 +134,3 @@ spec:
     - interval: 10s
       path: /metrics
       targetPort: 5000
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: giropops-senhas
-  labels:
-    name: giropops-senhas
-spec:
-  ingressClassName: nginx
-  rules:
-    - http:
-        paths:
-          - path: "/"
-            pathType: Prefix
-            backend:
-              service:
-                name: giropops-senhas
-                port:
-                  number: 5000

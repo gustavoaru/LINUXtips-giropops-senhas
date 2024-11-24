@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-configmap
+  namespace: develop
+data:
+  REDIS_ARGS: --appendonly yes

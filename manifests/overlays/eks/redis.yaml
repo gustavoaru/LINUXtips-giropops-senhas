@@ -3,6 +3,38 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: prometheus-redis-exporter
+  namespace: develop
 spec:
   endpoints:
     - interval: 10s
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+  namespace: develop
+  labels:
+    app: redis
+spec:
+  template:
+    spec:
+      containers:
+      - name: redis
+        image: cgr.dev/chainguard/redis:latest
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+      - name: redis-exporter
+        image: cgr.dev/chainguard/prometheus-redis-exporter:latest
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+  volumeClaimTemplates:
+  - metadata:
+      name: redis-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: redis-sc
+      resources:
+        requests:
+          storage: 1Gi

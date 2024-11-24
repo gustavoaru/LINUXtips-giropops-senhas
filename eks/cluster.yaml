@@ -17,6 +17,8 @@ addons:
     version: 1.26.1
   - name: aws-efs-csi-driver
     version: 1.7.3
+  - name: vpc-cni
+    version: v1.16.2-eksbuild.1
 
 iam:
   withOIDC: true

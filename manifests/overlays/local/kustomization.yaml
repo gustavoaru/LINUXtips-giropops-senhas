@@ -3,6 +3,8 @@ kind: Kustomization
 
 resources:
 - ../../base
+- ../../local
 
 patches:
 - path: deploy.yaml
+- path: redis.yaml

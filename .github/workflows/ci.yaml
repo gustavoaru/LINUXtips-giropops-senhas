@@ -4,6 +4,7 @@ on: # somente em alterações de pastas especificas
   push:
     branches:
       - 'main'
+      - 'develop'
     paths:
       - 'Dockerfile'
       - '**.js'
@@ -115,12 +116,11 @@ jobs:
     - name: Sign the container image ${{ env.VERSION_TAG }}
       run: cosign sign --yes ${{ env.VERSION_TAG }}
 
-    # - name: Create k8s Kind Cluster
-    #   uses: helm/kind-action@v1.8.0
-    #   with:
-    #     config: kind/cluster.yaml
-    # - run: |
-    #     make install-cluster-deps
-    #     make redis-deploy
-    #     make giropops-senhas-deploy-without-ingress
-    #     make run-load-test-k6-operator
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Create k8s Kind Cluster
+      uses: helm/kind-action@v1.10.0
+      with:
+        config: kind/cluster.yaml
+    - run: make test-app-github-actions

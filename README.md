@@ -7,6 +7,8 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 ### BACKLOG
 
 - [ ] [k8sgpt](https://github.com/k8sgpt-ai/k8sgpt);
+- [ ] [Furiko](https://furiko.io/);
+- [ ] [Knative](https://knative.dev/docs/);
 - [ ] [KubeArmor](https://github.com/kubearmor/KubeArmor);
 - [ ] [ChaosMesh](https://github.com/chaos-mesh/chaos-mesh);
 - [ ] [LitmusChaos](https://github.com/litmuschaos/litmus);
@@ -29,13 +31,19 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 ### TODO
 - [ ] Redis:
   - [ ] Run on cluster mode;
+- [ ] Write articles:
+  - [ ] Load tests;
+  - [ ] Kustomize;
+  - [ ] Chaos Engineering;
 - [ ] HPA:
   - [ ] Improve HPA behavior;
   - [ ] Use custom metrics on HPA;
 - [ ] Prometheus Monitoring:
+  - [ ] Dashboards:
+    - [ ] giropops-senhas;
+    - [ ] Redis;
   - [ ] Add more metrics to giropops-senhas;
     - [ ] PrometheusRule to giropops-senhas;
-- [ ] Remove `exclude` Kube-linter config;
 - [ ] cert-manager;
 - [ ] EKS:
   - [ ] aws-efs-csi-driver addon: https://hervekhg.medium.com/stop-using-ebs-as-persistant-volume-for-eks-pod-use-efs-instead-fev-2023-d9ee4a9b9eeb;
@@ -53,11 +61,10 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 
 ### WIP
 
+- [ ] Remove `exclude` Kube-linter config;
 
 ### TESTS
 
-- [ ] Github Actions:
-  - [ ] Create stage to jobs on build Github Actions;
 
 ### DONE
 
@@ -74,6 +81,7 @@ This project was created on the PICK [LinuxTips](https://www.linuxtips.io) and h
 - [x] Github Actions:
   - [x] Sign with Cosign;
   - [x] Lint Kube and YAML;
+  - [x] Create stage to jobs on build Github Actions;
 - [x] Redis:
   - [x] User nonRoot with StatefulSet using Chainguard image;
   - [x] Create K8s headless service;
@@ -185,4 +193,4 @@ PS.: Because we are doing a public repository, this will automatically be pushed
 
 Objective: I used K6 to run load test on application. Using K6 my objective was ensure application receive 1000 rpm.
 
-Reality: K6 load test on application with 4000 rpm in each endpoint `GET /`, `GET /api/senhas` and, `POST /api/gerar-senha` using 2 value on K6 parallelism parameter with up up 8000 rpm withot any error.
+Reality: K6 load test on application with 4000 rpm in each endpoint `GET /`, `GET /api/senhas` and, `POST /api/gerar-senha` using 2 value on K6 parallelism parameter with up up 8000 rpm without any error.
