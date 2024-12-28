@@ -1,10 +1,7 @@
 name: CI
 
-on: # somente em alterações de pastas especificas
+on:
   push:
-    branches:
-      - 'main'
-      - 'develop'
     paths:
       - 'Dockerfile'
       - '**.js'
@@ -21,6 +18,96 @@ permissions:
   contents: read
 
 jobs:
+  yaml-lint:
+    name: YAML Lint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: 'Yamllint K8s manifests'
+      uses: karancode/yamllint-github-action@master
+      with:
+        yamllint_file_or_dir: 'manifests/base'
+        yamllint_config_filepath: '.yamllint.yaml'
+
+    - name: 'Yamllint Kustomize Overlay EKS'
+      uses: karancode/yamllint-github-action@master
+      with:
+        yamllint_file_or_dir: 'manifests/overlays/eks'
+        yamllint_config_filepath: '.yamllint.yaml'
+
+    - name: 'Yamllint Kustomize Overlay Local'
+      uses: karancode/yamllint-github-action@master
+      with:
+        yamllint_file_or_dir: 'manifests/overlays/local'
+        yamllint_config_filepath: '.yamllint.yaml'
+
+    - name: 'Yamllint EKS Cluster'
+      uses: karancode/yamllint-github-action@master
+      with:
+        yamllint_file_or_dir: 'eks/'
+        yamllint_config_filepath: '.yamllint.yaml'
+
+    - name: 'Yamllint Kind Cluster'
+      uses: karancode/yamllint-github-action@master
+      with:
+        yamllint_file_or_dir: 'kind/'
+        yamllint_config_filepath: '.yamllint.yaml'
+
+    - name: 'Yamllint Load Test - K6 Operator manifests'
+      uses: karancode/yamllint-github-action@master
+      with:
+        yamllint_file_or_dir: 'load-test/'
+        yamllint_config_filepath: '.yamllint.yaml'
+
+  k8s-lint:
+    name: Kubernetes Lint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: kube-linter K8s manifests
+      uses: stackrox/kube-linter-action@v1
+      with:
+        directory: manifests/base
+        config: .kube-linter.yaml
+
+    - name: kube-linter K6 manifests
+      uses: stackrox/kube-linter-action@v1
+      with:
+        directory: load-test
+        config: .kube-linter.yaml
+
+  kind:
+    name: KIND - Integration Test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Create k8s Kind Cluster
+      uses: helm/kind-action@v1.10.0
+      with:
+        config: kind/cluster.yaml
+    - run: make test-app-github-actions
+
   sast:
     name: SAST
     runs-on: ubuntu-latest
@@ -28,7 +115,6 @@ jobs:
       contents: read
       packages: write
       id-token: write
-    environment: production
 
     steps:
     - name: Checkout
@@ -56,8 +142,8 @@ jobs:
       contents: read
       packages: write
       id-token: write
-    environment: production
-    needs: [sast]
+    environment: manual
+    needs: [sast, kind]
 
     steps:
     - name: Checkout
@@ -92,7 +178,6 @@ jobs:
       contents: read
       packages: write
       id-token: write
-    environment: production
     needs: [build]
 
     steps:
@@ -115,12 +200,3 @@ jobs:
 
     - name: Sign the container image ${{ env.VERSION_TAG }}
       run: cosign sign --yes ${{ env.VERSION_TAG }}
-
-    - name: Checkout
-      uses: actions/checkout@v4
-
-    - name: Create k8s Kind Cluster
-      uses: helm/kind-action@v1.10.0
-      with:
-        config: kind/cluster.yaml
-    - run: make test-app-github-actions
