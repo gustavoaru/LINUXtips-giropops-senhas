@@ -2,9 +2,6 @@ name: CI
 
 on: # somente em alterações de pastas especificas
   push:
-    branches:
-      - 'main'
-      - 'develop'
     paths:
       - 'Dockerfile'
       - '**.js'

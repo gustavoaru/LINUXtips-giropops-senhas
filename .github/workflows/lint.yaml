@@ -1,12 +1,7 @@
-name: YAML & K8s Lint
+name: Lint
 
 on:
-  push:
-    branches:
-      - 'main'
-      - 'develop'
-    paths:
-      - '**.yaml'
+  push
 
 permissions:
   contents: read

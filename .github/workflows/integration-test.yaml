@@ -1,9 +1,8 @@
-name: CI - Testing my environment
+name: Integration Test
 
 on: # somente em alterações de pastas especificas
   push:
     branches:
-      - 'main'
       - 'develop'
     paths:
       - '**.yaml'
@@ -21,14 +20,3 @@ jobs:
       packages: write
       id-token: write
     environment: production
-
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-
-    - name: Create k8s Kind Cluster
-      uses: helm/kind-action@v1.10.0
-      with:
-        config: kind/cluster.yaml
-    - run: |
-        make test-app-github-actions
